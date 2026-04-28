@@ -55,13 +55,11 @@ function AuthPage() {
   };
 
   const google = async () => {
-    try {
-      const { lovable } = await import("@/integrations/lovable");
-      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-      if (result.error) toast.error(result.error.message || t("common.error"));
-    } catch {
-      toast.error("Google sign-in is not configured yet.");
-    }
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: window.location.origin },
+    });
+    if (error) toast.error(error.message || t("common.error"));
   };
 
   return (
