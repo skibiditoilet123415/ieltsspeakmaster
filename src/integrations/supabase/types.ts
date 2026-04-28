@@ -14,7 +14,287 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      daily_usage: {
+        Row: {
+          day: string
+          tests_count: number
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          tests_count?: number
+          user_id: string
+        }
+        Update: {
+          day?: string
+          tests_count?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      flashcard_reviews: {
+        Row: {
+          id: string
+          result: string
+          reviewed_at: string
+          user_id: string
+          vocabulary_id: string
+        }
+        Insert: {
+          id?: string
+          result: string
+          reviewed_at?: string
+          user_id: string
+          vocabulary_id: string
+        }
+        Update: {
+          id?: string
+          result?: string
+          reviewed_at?: string
+          user_id?: string
+          vocabulary_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flashcard_reviews_vocabulary_id_fkey"
+            columns: ["vocabulary_id"]
+            isOneToOne: false
+            referencedRelation: "vocabulary"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          current_band: number | null
+          display_name: string | null
+          id: string
+          is_premium: boolean
+          language: string
+          target_band: number | null
+          theme: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          current_band?: number | null
+          display_name?: string | null
+          id: string
+          is_premium?: boolean
+          language?: string
+          target_band?: number | null
+          theme?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          current_band?: number | null
+          display_name?: string | null
+          id?: string
+          is_premium?: boolean
+          language?: string
+          target_band?: number | null
+          theme?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      session_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          part: string | null
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          part?: string | null
+          role: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          part?: string | null
+          role?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "speaking_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      speaking_sessions: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          feedback: Json | null
+          fluency_band: number | null
+          grammar_band: number | null
+          id: string
+          overall_band: number | null
+          pronunciation_band: number | null
+          status: string
+          topic_id: string | null
+          topic_title: string | null
+          user_id: string
+          vocabulary_band: number | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          feedback?: Json | null
+          fluency_band?: number | null
+          grammar_band?: number | null
+          id?: string
+          overall_band?: number | null
+          pronunciation_band?: number | null
+          status?: string
+          topic_id?: string | null
+          topic_title?: string | null
+          user_id: string
+          vocabulary_band?: number | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          feedback?: Json | null
+          fluency_band?: number | null
+          grammar_band?: number | null
+          id?: string
+          overall_band?: number | null
+          pronunciation_band?: number | null
+          status?: string
+          topic_id?: string | null
+          topic_title?: string | null
+          user_id?: string
+          vocabulary_band?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "speaking_sessions_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      topics: {
+        Row: {
+          category: string
+          created_at: string
+          difficulty: number
+          id: string
+          part1_questions: Json
+          part2_cue: Json
+          part3_questions: Json
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          difficulty?: number
+          id?: string
+          part1_questions?: Json
+          part2_cue?: Json
+          part3_questions?: Json
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          difficulty?: number
+          id?: string
+          part1_questions?: Json
+          part2_cue?: Json
+          part3_questions?: Json
+          title?: string
+        }
+        Relationships: []
+      }
+      vocabulary: {
+        Row: {
+          box: number
+          created_at: string
+          difficulty: number | null
+          example: string | null
+          id: string
+          meaning_en: string | null
+          meaning_vi: string | null
+          next_review: string
+          session_id: string | null
+          source: string | null
+          synonyms: string[] | null
+          times_known: number
+          times_seen: number
+          tip: string | null
+          topic: string | null
+          user_id: string
+          word: string
+        }
+        Insert: {
+          box?: number
+          created_at?: string
+          difficulty?: number | null
+          example?: string | null
+          id?: string
+          meaning_en?: string | null
+          meaning_vi?: string | null
+          next_review?: string
+          session_id?: string | null
+          source?: string | null
+          synonyms?: string[] | null
+          times_known?: number
+          times_seen?: number
+          tip?: string | null
+          topic?: string | null
+          user_id: string
+          word: string
+        }
+        Update: {
+          box?: number
+          created_at?: string
+          difficulty?: number | null
+          example?: string | null
+          id?: string
+          meaning_en?: string | null
+          meaning_vi?: string | null
+          next_review?: string
+          session_id?: string | null
+          source?: string | null
+          synonyms?: string[] | null
+          times_known?: number
+          times_seen?: number
+          tip?: string | null
+          topic?: string | null
+          user_id?: string
+          word?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vocabulary_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "speaking_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
