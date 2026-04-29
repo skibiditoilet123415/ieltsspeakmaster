@@ -275,19 +275,54 @@ function Speaking() {
   if (!topic) {
     return (
       <AppShell>
-        <h1 className="text-xl font-bold mb-4">{t("speaking.pick_topic")}</h1>
+        <h1 className="text-xl font-bold mb-3">{t("speaking.pick_topic")}</h1>
+        <div className="space-y-3 mb-4">
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search topics…"
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+          />
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+            {["all", ...Array.from(new Set(topics.map((tp) => tp.category)))].map((c) => (
+              <button
+                key={c}
+                onClick={() => setCategory(c)}
+                className={`whitespace-nowrap rounded-full px-3 py-1 text-xs border ${
+                  category === c ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground"
+                }`}
+              >
+                {c === "all" ? "All" : c}
+              </button>
+            ))}
+          </div>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              const pool = topics.filter((tp) => category === "all" || tp.category === category);
+              if (!pool.length) return;
+              startWithTopic(pool[Math.floor(Math.random() * pool.length)]);
+            }}
+          >
+            🎲 {t("speaking.random")}
+          </Button>
+        </div>
         <div className="grid grid-cols-1 gap-2">
-          {topics.map((tp) => (
-            <Card key={tp.id} className="p-4 cursor-pointer hover:shadow-elegant transition-shadow" onClick={() => startWithTopic(tp)}>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-semibold">{tp.title}</div>
-                  <div className="text-xs text-muted-foreground">{tp.category} · Band {tp.difficulty}</div>
+          {topics
+            .filter((tp) => (category === "all" || tp.category === category) && tp.title.toLowerCase().includes(search.toLowerCase()))
+            .map((tp) => (
+              <Card key={tp.id} className="p-4 cursor-pointer hover:shadow-elegant transition-shadow" onClick={() => startWithTopic(tp)}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-semibold">{tp.title}</div>
+                    <div className="text-xs text-muted-foreground">{tp.category} · Band {tp.difficulty}</div>
+                  </div>
+                  <Mic className="h-4 w-4 text-primary" />
                 </div>
-                <Mic className="h-4 w-4 text-primary" />
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))}
         </div>
       </AppShell>
     );
