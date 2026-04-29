@@ -35,18 +35,38 @@ function Speaking() {
   const [thinking, setThinking] = useState(false);
   const [scoring, setScoring] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [xpAwarded, setXpAwarded] = useState<{ amount: number; words: string[] } | null>(null);
+  const [knownVocab, setKnownVocab] = useState<string[]>([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState<string>("all");
   const sttRef = useRef<ReturnType<typeof createSTT> | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    supabase.from("topics").select("*").limit(20).then(({ data }) => setTopics(data || []));
+    supabase.from("topics").select("*").order("difficulty", { ascending: true }).then(({ data }) => setTopics(data || []));
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("vocabulary").select("word").eq("user_id", user.id).then(({ data }) => {
+      setKnownVocab((data || []).map((r: any) => String(r.word).toLowerCase()));
+    });
+  }, [user]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, thinking]);
 
-  const startWithTopic = (tp: any) => {
+  const startWithTopic = async (tp: any) => {
+    // Free-tier daily limit check (server-enforced)
+    const { data: chk, error } = await supabase.rpc("consume_daily_test");
+    if (error) { toast.error(error.message); return; }
+    const c: any = chk;
+    if (c && c.allowed === false) {
+      if (c.reason === "limit") toast.error(t("speaking.limit"));
+      else toast.error(t("common.error"));
+      return;
+    }
     setTopic(tp);
     const first = `Hello, I'm your IELTS examiner. Today's topic is "${tp.title}". Let's begin with Part 1. ${tp.part1_questions?.[0] || ""}`;
     setMessages([{ role: "examiner", content: first, part: "part1" }]);
