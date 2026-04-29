@@ -50,11 +50,12 @@ function Dashboard() {
       ]);
 
       if (profile) {
-        setTarget(Number(profile.target_band) || 7);
-        setName(profile.display_name || user.email?.split("@")[0] || "");
-        setXp(Number(profile.xp) || 0);
-        setStreak(Number(profile.streak_days) || 0);
-        setPremium(!!profile.is_premium);
+        const p: any = profile;
+        setTarget(Number(p.target_band) || 7);
+        setName(p.display_name || user.email?.split("@")[0] || "");
+        setXp(Number(p.xp) || 0);
+        setStreak(Number(p.streak_days) || 0);
+        setPremium(!!p.is_premium);
       }
       const completed = sessions || [];
       setTrend(
