@@ -300,7 +300,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      award_xp: { Args: { amount: number }; Returns: Json }
+      consume_daily_test: { Args: never; Returns: Json }
     }
     Enums: {
       [_ in never]: never
