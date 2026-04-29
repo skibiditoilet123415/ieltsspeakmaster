@@ -185,6 +185,26 @@ function Speaking() {
             toast.success(t("speaking.saved_vocab", { n: rows.length }));
           }
         }
+
+        // XP rewards: +5 for finishing, +10 per learned vocab word actually used in the answers
+        const candidateText = messages
+          .filter((m) => m.role === "candidate")
+          .map((m) => m.content.toLowerCase())
+          .join(" \n ");
+        const used = Array.from(
+          new Set(
+            knownVocab.filter((w) => {
+              if (!w || w.length < 3) return false;
+              const re = new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+              return re.test(candidateText);
+            }),
+          ),
+        ).slice(0, 10);
+        const amount = 5 + used.length * 10;
+        try {
+          await supabase.rpc("award_xp", { amount });
+        } catch {/* non-fatal */}
+        if (used.length) setXpAwarded({ amount, words: used });
       }
     } catch (e: any) {
       toast.error(e.message || t("common.error"));
