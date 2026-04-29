@@ -253,6 +253,16 @@ function Speaking() {
               <p className="text-sm text-muted-foreground whitespace-pre-line">{result.plan}</p>
             </Card>
           )}
+          {xpAwarded && (
+            <Card className="p-4 bg-gradient-primary text-primary-foreground border-0 shadow-elegant">
+              <div className="text-sm font-semibold">{t("speaking.xp_earned", { n: xpAwarded.amount })}</div>
+              {xpAwarded.words.length > 0 && (
+                <div className="text-xs opacity-90 mt-1">
+                  {t("speaking.used_words", { words: xpAwarded.words.join(", ") })}
+                </div>
+              )}
+            </Card>
+          )}
           <Button className="w-full" onClick={() => navigate({ to: "/" })}>← Dashboard</Button>
           <Button variant="outline" className="w-full" onClick={() => navigate({ to: "/vocabulary" })}>
             {t("nav.vocab")} →
