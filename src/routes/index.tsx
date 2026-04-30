@@ -4,28 +4,165 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
-import { RequireAuth } from "@/components/RequireAuth";
 import { BandRing } from "@/components/BandRing";
 import { BandTrend } from "@/components/BandTrend";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Mic, History as HistoryIcon, Target, Sparkles, Flame, Trophy } from "lucide-react";
+import {
+  Mic,
+  History as HistoryIcon,
+  Sparkles,
+  Flame,
+  Trophy,
+  BookOpen,
+  Brain,
+  Target,
+  CheckCircle2,
+  ArrowRight,
+} from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  component: () => (
-    <RequireAuth>
-      <Dashboard />
-    </RequireAuth>
-  ),
+  head: () => ({
+    meta: [
+      { title: "IELTS Speaking Master — Practice with AI, Reach Band 7+" },
+      {
+        name: "description",
+        content:
+          "Practice IELTS Speaking with an AI examiner. Instant band scoring, smart vocabulary, spaced-repetition flashcards.",
+      },
+    ],
+  }),
+  component: HomePage,
 });
 
-function Dashboard() {
+function HomePage() {
+  const { user } = useAuth();
+  const { t } = useI18n();
+  const navigate = useNavigate();
+
+  return (
+    <AppShell>
+      <Hero onStart={() => navigate({ to: user ? "/speaking" : "/auth" })} signedIn={!!user} t={t} />
+      <Features t={t} />
+      {user ? <SignedInPanel /> : <CallToAction onStart={() => navigate({ to: "/auth" })} t={t} />}
+    </AppShell>
+  );
+}
+
+function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean; t: any }) {
+  return (
+    <section className="relative overflow-hidden rounded-3xl bg-gradient-hero text-primary-foreground shadow-elegant px-6 py-16 sm:px-12 sm:py-24">
+      <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" aria-hidden />
+      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" aria-hidden />
+      <div className="relative max-w-3xl mx-auto text-center space-y-6">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur px-3 py-1 text-xs font-semibold">
+          <Sparkles className="h-3.5 w-3.5" /> AI-powered IELTS Examiner
+        </span>
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.05]">
+          Master <span className="text-white/95">IELTS Speaking</span>
+          <br />
+          <span className="opacity-90">and reach Band 7+</span>
+        </h1>
+        <p className="text-base sm:text-lg opacity-90 max-w-2xl mx-auto">
+          Practice realistic Part 1, 2 & 3 questions with an AI examiner. Get instant band
+          scores, fluency feedback, and a personalised vocabulary plan.
+        </p>
+        <div className="flex flex-wrap gap-3 justify-center pt-2">
+          <Button
+            size="lg"
+            className="rounded-full h-12 px-7 bg-white text-primary hover:bg-white/90 font-semibold shadow-soft"
+            onClick={onStart}
+          >
+            <Mic className="h-5 w-5" /> {signedIn ? "Start Speaking" : "Get Started Free"}
+          </Button>
+          <Link to="/vocabulary">
+            <Button
+              size="lg"
+              variant="outline"
+              className="rounded-full h-12 px-7 bg-transparent border-white/40 text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
+            >
+              <BookOpen className="h-5 w-5" /> Explore Vocabulary
+            </Button>
+          </Link>
+        </div>
+        <div className="flex items-center justify-center gap-6 pt-4 text-xs opacity-90">
+          <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5" /> 200+ topics</span>
+          <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5" /> Instant scoring</span>
+          <span className="inline-flex items-center gap-1"><CheckCircle2 className="h-3.5 w-3.5" /> Free to start</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Features({ t }: { t: any }) {
+  const items = [
+    {
+      icon: Mic,
+      title: "AI Examiner",
+      desc: "Realistic Part 1, 2 & 3 simulations with adaptive follow-ups.",
+    },
+    {
+      icon: Target,
+      title: "Instant Band Score",
+      desc: "Fluency, lexical resource, grammar & pronunciation feedback in seconds.",
+    },
+    {
+      icon: BookOpen,
+      title: "Smart Vocabulary",
+      desc: "Save words from your sessions and review with spaced repetition.",
+    },
+    {
+      icon: Brain,
+      title: "Personalised Plan",
+      desc: "Track your trend and follow targeted improvements toward your goal band.",
+    },
+  ];
+  return (
+    <section className="mt-12">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl sm:text-3xl font-bold">Everything you need to hit your target band</h2>
+        <p className="text-muted-foreground mt-2 text-sm">A complete IELTS Speaking trainer powered by AI.</p>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {items.map(({ icon: Icon, title, desc }) => (
+          <Card key={title} className="p-5 shadow-soft hover:shadow-elegant transition-shadow">
+            <div className="h-11 w-11 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow mb-4">
+              <Icon className="h-5 w-5 text-primary-foreground" />
+            </div>
+            <h3 className="font-semibold">{title}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{desc}</p>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
+  return (
+    <section className="mt-12">
+      <Card className="p-8 sm:p-10 text-center shadow-elegant border-0 bg-gradient-primary text-primary-foreground">
+        <h2 className="text-2xl sm:text-3xl font-bold">Ready to start practising?</h2>
+        <p className="opacity-90 mt-2 text-sm sm:text-base">Create a free account and take your first AI mock test today.</p>
+        <Button
+          size="lg"
+          className="mt-6 rounded-full h-12 px-8 bg-white text-primary hover:bg-white/90 font-semibold"
+          onClick={onStart}
+        >
+          Get Started Free <ArrowRight className="h-4 w-4" />
+        </Button>
+      </Card>
+    </section>
+  );
+}
+
+function SignedInPanel() {
   const { user } = useAuth();
   const { t } = useI18n();
   const navigate = useNavigate();
   const [avg, setAvg] = useState<number | null>(null);
   const [target, setTarget] = useState<number>(7);
-  const [name, setName] = useState<string>("");
   const [recent, setRecent] = useState<any[]>([]);
   const [trend, setTrend] = useState<{ date: string; band: number }[]>([]);
   const [xp, setXp] = useState<number>(0);
@@ -52,7 +189,6 @@ function Dashboard() {
       if (profile) {
         const p: any = profile;
         setTarget(Number(p.target_band) || 7);
-        setName(p.display_name || user.email?.split("@")[0] || "");
         setXp(Number(p.xp) || 0);
         setStreak(Number(p.streak_days) || 0);
         setPremium(!!p.is_premium);
@@ -73,115 +209,78 @@ function Dashboard() {
   const remaining = Math.max(0, 2 - usedToday);
 
   return (
-    <AppShell>
-      <div className="space-y-6">
+    <section className="mt-12 space-y-6">
+      <div className="flex items-end justify-between">
         <div>
-          <div className="text-sm text-muted-foreground">{t("dash.hi")}, 👋</div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{name}</h1>
+          <h2 className="text-2xl font-bold">Your progress</h2>
+          <p className="text-sm text-muted-foreground">{premium ? "Unlimited daily tests" : `${remaining} free test${remaining === 1 ? "" : "s"} left today`}</p>
         </div>
+        <Button onClick={() => navigate({ to: "/history" })} variant="outline" size="sm" className="rounded-full">
+          <HistoryIcon className="h-4 w-4" /> View history
+        </Button>
+      </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-       <div className="space-y-6 lg:col-span-2">
-        <Card className="p-6 bg-gradient-hero text-primary-foreground shadow-elegant border-0">
-          <div className="flex items-center gap-4">
-            <BandRing band={avg ?? 0} label="avg" />
-            <div className="flex-1">
-              <div className="text-xs opacity-80">{t("dash.avg_band")}</div>
-              <div className="text-3xl font-bold">{avg ? avg.toFixed(1) : "—"}</div>
-              <div className="mt-2 flex items-center gap-1 text-xs opacity-90">
-                <Target className="h-3 w-3" /> {t("dash.target_band")}: {target.toFixed(1)}
-              </div>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card className="p-5 shadow-soft flex items-center gap-4">
+          <BandRing band={avg ?? 0} label="avg" />
+          <div>
+            <div className="text-xs text-muted-foreground">Average band</div>
+            <div className="text-2xl font-bold">{avg ? avg.toFixed(1) : "—"}</div>
+            <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+              <Target className="h-3 w-3" /> Target: {target.toFixed(1)}
             </div>
           </div>
         </Card>
-
-        <div className="grid grid-cols-2 gap-3">
-          <Card className="p-4 flex items-center gap-3 shadow-soft">
-            <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Trophy className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground">{t("dash.xp")}</div>
-              <div className="text-xl font-bold">{xp}</div>
-            </div>
-          </Card>
-          <Card className="p-4 flex items-center gap-3 shadow-soft">
-            <div className="h-10 w-10 rounded-lg bg-orange-500/15 flex items-center justify-center">
-              <Flame className="h-5 w-5 text-orange-500" />
-            </div>
-            <div>
-              <div className="text-xs text-muted-foreground">{t("dash.streak")}</div>
-              <div className="text-xl font-bold">{streak}</div>
-            </div>
-          </Card>
-        </div>
-
-        <Card className="p-4 shadow-soft">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-sm font-semibold">{t("dash.trend")}</h2>
-            <div className="text-xs text-muted-foreground">{premium ? t("dash.daily_unlimited") : t("dash.daily_left", { n: remaining })}</div>
+        <Card className="p-5 shadow-soft flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-gradient-primary flex items-center justify-center">
+            <Trophy className="h-6 w-6 text-primary-foreground" />
           </div>
+          <div>
+            <div className="text-xs text-muted-foreground">XP</div>
+            <div className="text-2xl font-bold">{xp}</div>
+          </div>
+        </Card>
+        <Card className="p-5 shadow-soft flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-orange-500/15 flex items-center justify-center">
+            <Flame className="h-6 w-6 text-orange-500" />
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground">Streak</div>
+            <div className="text-2xl font-bold">{streak} days</div>
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card className="p-5 shadow-soft lg:col-span-2">
+          <h3 className="text-sm font-semibold mb-3">Band trend</h3>
           {trend.length >= 2 ? (
             <BandTrend points={trend} target={target} />
           ) : (
-            <p className="text-sm text-muted-foreground py-4 text-center">{t("dash.no_trend")}</p>
+            <p className="text-sm text-muted-foreground py-8 text-center">Complete a few tests to see your trend.</p>
           )}
         </Card>
-
-        <div className="grid grid-cols-2 gap-3">
-          <Button
-            className="h-auto py-4 flex-col gap-2 bg-gradient-primary shadow-soft"
-            onClick={() => navigate({ to: "/speaking" })}
-            disabled={!premium && remaining === 0}
-          >
-            <Mic className="h-5 w-5" />
-            <span>{t("dash.start")}</span>
-          </Button>
-          <Button variant="outline" className="h-auto py-4 flex-col gap-2" onClick={() => navigate({ to: "/history" })}>
-            <HistoryIcon className="h-5 w-5" />
-            <span>{t("dash.history")}</span>
-          </Button>
-        </div>
-       </div>
-
-       <div className="space-y-6">
-        {!premium && (
-          <Card className="p-4 flex items-center gap-3 shadow-soft">
-            <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <div className="flex-1">
-              <div className="font-semibold text-sm">{t("dash.upgrade")}</div>
-              <div className="text-xs text-muted-foreground">{t("dash.upgrade_price")}</div>
-            </div>
-            <Button size="sm" variant="secondary">→</Button>
-          </Card>
-        )}
-
-        <div>
-          <h2 className="text-sm font-semibold mb-3">{t("dash.recent")}</h2>
+        <Card className="p-5 shadow-soft">
+          <h3 className="text-sm font-semibold mb-3">Recent sessions</h3>
           {recent.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("dash.no_sessions")}</p>
+            <p className="text-sm text-muted-foreground">No sessions yet.</p>
           ) : (
             <div className="space-y-2">
               {recent.map((s) => (
                 <Link key={s.id} to="/history" className="block">
-                  <Card className="p-3 flex items-center justify-between">
-                    <div>
-                      <div className="font-medium text-sm">{s.topic_title || "Session"}</div>
+                  <div className="flex items-center justify-between rounded-lg p-2 hover:bg-accent/50 transition-colors">
+                    <div className="min-w-0">
+                      <div className="font-medium text-sm truncate">{s.topic_title || "Session"}</div>
                       <div className="text-xs text-muted-foreground">{new Date(s.created_at).toLocaleDateString()}</div>
                     </div>
                     <div className="text-lg font-bold text-primary">{Number(s.overall_band).toFixed(1)}</div>
-                  </Card>
+                  </div>
                 </Link>
               ))}
             </div>
           )}
-        </div>
-       </div>
+        </Card>
       </div>
-      </div>
-    </AppShell>
+    </section>
   );
 }
-
