@@ -142,7 +142,9 @@ function Dashboard() {
             <span>{t("dash.history")}</span>
           </Button>
         </div>
+       </div>
 
+       <div className="space-y-6">
         {!premium && (
           <Card className="p-4 flex items-center gap-3 shadow-soft">
             <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center">
@@ -176,7 +178,10 @@ function Dashboard() {
             </div>
           )}
         </div>
+       </div>
+      </div>
       </div>
     </AppShell>
   );
 }
+
