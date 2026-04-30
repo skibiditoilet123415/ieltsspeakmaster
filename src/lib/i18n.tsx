@@ -95,8 +95,10 @@ const dict = {
   vi: {
     "app.name": "IELTS Speaking AI",
     "app.tagline": "Luyện tập. Học từ. Đạt Band 7+",
+    "nav.home": "Trang chủ",
     "nav.speaking": "Nói",
     "nav.vocab": "Từ vựng",
+    "nav.history": "Lịch sử",
     "nav.settings": "Cài đặt",
     "auth.signin": "Đăng nhập",
     "auth.signup": "Đăng ký",
