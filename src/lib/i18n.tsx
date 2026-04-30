@@ -6,8 +6,10 @@ const dict = {
   en: {
     "app.name": "IELTS Speaking AI",
     "app.tagline": "Practice. Learn. Reach Band 7+",
+    "nav.home": "Home",
     "nav.speaking": "Speaking",
     "nav.vocab": "Vocabulary",
+    "nav.history": "History",
     "nav.settings": "Settings",
     "auth.signin": "Sign in",
     "auth.signup": "Sign up",
@@ -93,8 +95,10 @@ const dict = {
   vi: {
     "app.name": "IELTS Speaking AI",
     "app.tagline": "Luyện tập. Học từ. Đạt Band 7+",
+    "nav.home": "Trang chủ",
     "nav.speaking": "Nói",
     "nav.vocab": "Từ vựng",
+    "nav.history": "Lịch sử",
     "nav.settings": "Cài đặt",
     "auth.signin": "Đăng nhập",
     "auth.signup": "Đăng ký",
