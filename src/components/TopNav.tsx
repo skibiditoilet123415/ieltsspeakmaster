@@ -37,7 +37,7 @@ export function TopNav() {
           <div className="h-8 w-8 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
             <Mic className="h-4 w-4 text-primary-foreground" />
           </div>
-          <span className="hidden sm:block text-sm font-extrabold tracking-tight">SPEAK<span className="text-primary">AI</span></span>
+          <span className="hidden sm:block text-sm font-extrabold tracking-tight">IELTS Speaking <span className="text-primary">Master</span></span>
         </Link>
 
         {/* Desktop nav */}
