@@ -22,7 +22,7 @@ export function TopNav() {
   const path = location.pathname;
 
   const links = [
-    { to: "/", label: t("nav.dashboard") || "Dashboard", icon: Sparkles, match: (p: string) => p === "/" },
+    { to: "/", label: t("nav.home") || "Home", icon: Sparkles, match: (p: string) => p === "/" },
     { to: "/speaking", label: t("nav.speaking"), icon: Mic, match: (p: string) => p.startsWith("/speaking") },
     { to: "/vocabulary", label: t("nav.vocab"), icon: BookOpen, match: (p: string) => p.startsWith("/vocabulary") || p.startsWith("/flashcards") },
     { to: "/history", label: t("dash.history") || "History", icon: HistoryIcon, match: (p: string) => p.startsWith("/history") },
