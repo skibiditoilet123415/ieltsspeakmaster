@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Mic, BookOpen, History as HistoryIcon, Settings as SettingsIcon, Sparkles, LogOut, Moon, Sun, Languages } from "lucide-react";
+import { Mic, LogOut, Moon, Sun, Languages, Settings as SettingsIcon } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
@@ -22,40 +22,38 @@ export function TopNav() {
   const path = location.pathname;
 
   const links = [
-    { to: "/", label: t("nav.home") || "Home", icon: Sparkles, match: (p: string) => p === "/" },
-    { to: "/speaking", label: t("nav.speaking"), icon: Mic, match: (p: string) => p.startsWith("/speaking") },
-    { to: "/vocabulary", label: t("nav.vocab"), icon: BookOpen, match: (p: string) => p.startsWith("/vocabulary") || p.startsWith("/flashcards") },
-    { to: "/history", label: t("dash.history") || "History", icon: HistoryIcon, match: (p: string) => p.startsWith("/history") },
-    { to: "/settings", label: t("nav.settings"), icon: SettingsIcon, match: (p: string) => p.startsWith("/settings") },
+    { to: "/", label: t("nav.home") || "Home", match: (p: string) => p === "/" },
+    { to: "/speaking", label: t("nav.speaking") || "Speaking", match: (p: string) => p.startsWith("/speaking") },
+    { to: "/vocabulary", label: t("nav.vocab") || "Vocabulary", match: (p: string) => p.startsWith("/vocabulary") || p.startsWith("/flashcards") },
+    { to: "/history", label: t("dash.history") || "History", match: (p: string) => p.startsWith("/history") },
+    { to: "/settings", label: t("nav.settings") || "Settings", match: (p: string) => p.startsWith("/settings") },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-4">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="h-9 w-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Mic className="h-5 w-5 text-primary-foreground" />
+    <header className="sticky top-0 z-40 w-full pt-4 px-4">
+      <div className="mx-auto max-w-6xl bg-card/95 backdrop-blur border border-border rounded-full shadow-elegant h-14 pl-4 pr-2 flex items-center gap-2">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 shrink-0 pr-2">
+          <div className="h-8 w-8 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
+            <Mic className="h-4 w-4 text-primary-foreground" />
           </div>
-          <div className="hidden sm:block">
-            <div className="text-sm font-bold leading-tight">IELTS Speaking AI</div>
-            <div className="text-[10px] text-muted-foreground leading-tight">Band 7+ Trainer</div>
-          </div>
+          <span className="hidden sm:block text-sm font-extrabold tracking-tight">SPEAK<span className="text-primary">AI</span></span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Primary">
-          {links.map(({ to, label, icon: Icon, match }) => {
+        {/* Desktop nav */}
+        <nav className="hidden md:flex items-center gap-1 flex-1 justify-center" aria-label="Primary">
+          {links.map(({ to, label, match }) => {
             const active = match(path);
             return (
               <Link
                 key={to}
                 to={to as any}
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                   active
                     ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
+                    : "text-foreground/80 hover:text-foreground hover:bg-accent/60"
                 }`}
               >
-                <Icon className="h-4 w-4" />
                 {label}
               </Link>
             );
@@ -64,19 +62,21 @@ export function TopNav() {
 
         <div className="flex-1 md:hidden" />
 
-        <div className="flex items-center gap-1">
+        {/* Right cluster */}
+        <div className="flex items-center gap-1 shrink-0">
           <Button
             variant="ghost"
             size="icon"
+            className="rounded-full h-9 w-9"
             onClick={() => setLang(lang === "en" ? "vi" : "en")}
             aria-label="Toggle language"
           >
             <Languages className="h-4 w-4" />
-            <span className="sr-only">Lang</span>
           </Button>
           <Button
             variant="ghost"
             size="icon"
+            className="rounded-full h-9 w-9"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle theme"
           >
@@ -86,11 +86,14 @@ export function TopNav() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="ml-1 px-2">
-                  <div className="h-7 w-7 rounded-full bg-gradient-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
+                <button className="ml-1 rounded-full h-10 px-1 pr-4 flex items-center gap-2 bg-gradient-primary text-primary-foreground shadow-soft hover:opacity-90 transition">
+                  <div className="h-8 w-8 rounded-full bg-white/20 text-xs font-bold flex items-center justify-center">
                     {(user.email || "U").charAt(0).toUpperCase()}
                   </div>
-                </Button>
+                  <span className="hidden sm:inline text-sm font-semibold">
+                    {t("dash.start") || "Bắt đầu"}
+                  </span>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
@@ -104,29 +107,32 @@ export function TopNav() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button size="sm" onClick={() => navigate({ to: "/auth" })}>
-              {t("auth.signin")}
+            <Button
+              size="sm"
+              className="ml-1 rounded-full h-10 px-5 bg-gradient-primary text-primary-foreground shadow-soft"
+              onClick={() => navigate({ to: "/auth" })}
+            >
+              {t("auth.signin") || "Bắt đầu"}
             </Button>
           )}
         </div>
       </div>
 
       {/* Mobile nav row */}
-      <nav className="md:hidden border-t border-border overflow-x-auto" aria-label="Mobile primary">
-        <div className="mx-auto max-w-7xl px-2 flex items-center gap-1 py-2">
-          {links.map(({ to, label, icon: Icon, match }) => {
+      <nav className="md:hidden mx-auto max-w-6xl mt-2 overflow-x-auto" aria-label="Mobile primary">
+        <div className="flex items-center gap-1 px-2 py-1">
+          {links.map(({ to, label, match }) => {
             const active = match(path);
             return (
               <Link
                 key={to}
                 to={to as any}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
                   active
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent/60"
                 }`}
               >
-                <Icon className="h-3.5 w-3.5" />
                 {label}
               </Link>
             );
