@@ -77,9 +77,11 @@ function Dashboard() {
       <div className="space-y-6">
         <div>
           <div className="text-sm text-muted-foreground">{t("dash.hi")}, 👋</div>
-          <h1 className="text-2xl font-bold">{name}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{name}</h1>
         </div>
 
+      <div className="grid gap-6 lg:grid-cols-3">
+       <div className="space-y-6 lg:col-span-2">
         <Card className="p-6 bg-gradient-hero text-primary-foreground shadow-elegant border-0">
           <div className="flex items-center gap-4">
             <BandRing band={avg ?? 0} label="avg" />
@@ -140,7 +142,9 @@ function Dashboard() {
             <span>{t("dash.history")}</span>
           </Button>
         </div>
+       </div>
 
+       <div className="space-y-6">
         {!premium && (
           <Card className="p-4 flex items-center gap-3 shadow-soft">
             <div className="h-10 w-10 rounded-lg bg-gradient-primary flex items-center justify-center">
@@ -174,7 +178,10 @@ function Dashboard() {
             </div>
           )}
         </div>
+       </div>
+      </div>
       </div>
     </AppShell>
   );
 }
+
