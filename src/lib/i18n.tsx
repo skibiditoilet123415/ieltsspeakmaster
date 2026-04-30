@@ -6,8 +6,10 @@ const dict = {
   en: {
     "app.name": "IELTS Speaking AI",
     "app.tagline": "Practice. Learn. Reach Band 7+",
+    "nav.home": "Home",
     "nav.speaking": "Speaking",
     "nav.vocab": "Vocabulary",
+    "nav.history": "History",
     "nav.settings": "Settings",
     "auth.signin": "Sign in",
     "auth.signup": "Sign up",
