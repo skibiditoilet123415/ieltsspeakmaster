@@ -1,19 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
-import { BandRing } from "@/components/BandRing";
-import { BandTrend } from "@/components/BandTrend";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
   Mic,
-  History as HistoryIcon,
   Sparkles,
-  Flame,
-  Trophy,
   BookOpen,
   Brain,
   Target,
