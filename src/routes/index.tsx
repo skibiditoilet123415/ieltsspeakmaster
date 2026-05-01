@@ -19,6 +19,9 @@ import {
   Target,
   CheckCircle2,
   ArrowRight,
+  Star,
+  Quote,
+  Users,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
