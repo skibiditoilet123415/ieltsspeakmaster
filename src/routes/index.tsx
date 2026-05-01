@@ -50,7 +50,7 @@ function HomePage() {
       <TopStudent />
       <StudentsWall />
       <Testimonials />
-      {user ? <SignedInPanel /> : <CallToAction onStart={() => navigate({ to: "/auth" })} t={t} />}
+      {!user && <CallToAction onStart={() => navigate({ to: "/auth" })} t={t} />}
     </AppShell>
   );
 }
