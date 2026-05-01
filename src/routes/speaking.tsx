@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { createSTT, speak, stopSpeaking } from "@/lib/voice";
+import { ProgressPanel } from "@/components/ProgressPanel";
 import { Mic, Square, Send, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -286,6 +287,9 @@ function Speaking() {
 
     return (
       <AppShell>
+        <div className="mb-6">
+          <ProgressPanel />
+        </div>
         <h1 className="text-xl font-bold mb-1">{t("speaking.pick_topic")}</h1>
         <p className="text-xs text-muted-foreground mb-3">{topics.length} topics available</p>
 
