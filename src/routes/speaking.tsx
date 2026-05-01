@@ -287,6 +287,9 @@ function Speaking() {
 
     return (
       <AppShell>
+        <div className="mb-6">
+          <ProgressPanel />
+        </div>
         <h1 className="text-xl font-bold mb-1">{t("speaking.pick_topic")}</h1>
         <p className="text-xs text-muted-foreground mb-3">{topics.length} topics available</p>
 
