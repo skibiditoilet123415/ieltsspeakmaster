@@ -15,6 +15,10 @@ import {
   Star,
   Quote,
   Users,
+  Trophy,
+  Award,
+  TrendingUp,
+  Heart,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
@@ -160,29 +164,71 @@ function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
 function TopStudent() {
   return (
     <section className="mt-16">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold">Vinh danh học viên xuất sắc</h2>
-        <p className="text-sm text-muted-foreground mt-1">Học viên đạt band cao nhất tháng này</p>
-      </div>
-      <Card className="max-w-2xl mx-auto p-6 sm:p-8 bg-gradient-primary text-primary-foreground border-0 shadow-elegant">
-        <div className="flex flex-col sm:flex-row gap-6 items-center">
-          <div className="h-28 w-28 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-4xl font-bold shrink-0">
-            NG
+      <div className="flex items-end justify-between mb-6 gap-4">
+        <div>
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            <Trophy className="h-4 w-4" /> Hall of Fame
           </div>
-          <div className="flex-1 text-center sm:text-left">
-            <div className="text-xs uppercase tracking-wider opacity-80">Học viên tiêu biểu</div>
-            <div className="text-xl font-bold mt-1">Nguyễn Trần Ngân Giang</div>
-            <p className="text-sm opacity-90 mt-2 leading-relaxed">
-              "Em thấy rất hài lòng với phương pháp luyện nói của IELTS Speaking Master.
-              AI chấm điểm rất chi tiết, giúp em biết mình yếu ở đâu để cải thiện. Em đã đạt được band điểm mơ ước!"
-            </p>
-            <div className="flex items-center gap-4 mt-4 justify-center sm:justify-start">
-              <div className="text-3xl font-extrabold">8.0</div>
-              <div className="grid grid-cols-4 gap-2 text-[11px]">
-                <div className="text-center"><div className="opacity-75">Fluency</div><div className="font-bold">8.5</div></div>
-                <div className="text-center"><div className="opacity-75">Lexical</div><div className="font-bold">8.0</div></div>
-                <div className="text-center"><div className="opacity-75">Grammar</div><div className="font-bold">7.5</div></div>
-                <div className="text-center"><div className="opacity-75">Pron.</div><div className="font-bold">8.0</div></div>
+          <h2 className="text-2xl sm:text-3xl font-bold mt-2">Vinh danh học viên xuất sắc</h2>
+          <p className="text-sm text-muted-foreground mt-1">Học viên đạt band cao nhất tháng này</p>
+        </div>
+        <div className="hidden sm:block text-right text-xs text-muted-foreground">
+          <div className="font-mono">No. 01</div>
+          <div className="font-mono">/ 2026</div>
+        </div>
+      </div>
+
+      <Card className="overflow-hidden border-0 shadow-elegant">
+        <div className="grid md:grid-cols-5">
+          {/* Left: portrait block */}
+          <div className="md:col-span-2 relative bg-gradient-hero p-8 flex flex-col justify-between min-h-[280px]">
+            <div className="absolute top-4 right-4 text-primary-foreground/40 text-[10px] font-mono tracking-widest">
+              IELTS · 2026
+            </div>
+            <div className="relative">
+              <div className="h-32 w-32 rounded-full bg-white/15 backdrop-blur-md border-4 border-white/30 flex items-center justify-center text-5xl font-black text-white shadow-glow">
+                NG
+              </div>
+              <div className="absolute -bottom-2 -right-2 h-12 w-12 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg">
+                <Trophy className="h-6 w-6 text-yellow-900" />
+              </div>
+            </div>
+            <div className="text-primary-foreground">
+              <div className="text-[10px] uppercase tracking-[0.3em] opacity-70">Top Student</div>
+              <div className="text-2xl font-extrabold leading-tight mt-1">Nguyễn Trần<br/>Ngân Giang</div>
+            </div>
+          </div>
+
+          {/* Right: quote + scores */}
+          <div className="md:col-span-3 p-8 bg-card flex flex-col justify-between">
+            <div>
+              <Quote className="h-8 w-8 text-primary/20" />
+              <p className="text-base sm:text-lg leading-relaxed mt-2 font-medium">
+                Em thấy rất hài lòng với phương pháp luyện nói của IELTS Speaking Master.
+                AI chấm điểm rất chi tiết, giúp em biết mình yếu ở đâu để cải thiện.
+                <span className="text-primary"> Em đã đạt được band điểm mơ ước!</span>
+              </p>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-dashed">
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Overall Band</div>
+                  <div className="text-5xl font-black bg-gradient-primary bg-clip-text text-transparent">8.0</div>
+                </div>
+                <div className="grid grid-cols-4 gap-3 text-center">
+                  {[
+                    { l: "Fluency", v: "8.5" },
+                    { l: "Lexical", v: "8.0" },
+                    { l: "Grammar", v: "7.5" },
+                    { l: "Pron.", v: "8.0" },
+                  ].map((s) => (
+                    <div key={s.l} className="px-2">
+                      <div className="text-lg font-bold">{s.v}</div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">{s.l}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -208,34 +254,60 @@ function StudentsWall() {
     { name: "Trịnh Khả Hân", band: 8.0 },
   ];
   const initials = (n: string) => n.split(" ").slice(-2).map((w) => w[0]).join("");
-  const palette = [
-    "from-blue-500 to-indigo-500",
-    "from-pink-500 to-rose-500",
-    "from-emerald-500 to-teal-500",
-    "from-amber-500 to-orange-500",
-    "from-violet-500 to-purple-500",
-    "from-cyan-500 to-sky-500",
-  ];
+
   return (
-    <section className="mt-12">
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center gap-2 text-primary font-bold text-2xl sm:text-3xl">
-          <Users className="h-6 w-6" /> 100.000+ học viên
+    <section className="mt-16">
+      <div className="grid lg:grid-cols-3 gap-6 items-center">
+        {/* Left: stat hero */}
+        <div className="lg:col-span-1 text-center lg:text-left">
+          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+            <TrendingUp className="h-4 w-4" /> Cộng đồng
+          </div>
+          <div className="mt-3 flex items-baseline gap-2 justify-center lg:justify-start">
+            <span className="text-5xl sm:text-6xl font-black bg-gradient-primary bg-clip-text text-transparent">100K+</span>
+          </div>
+          <h3 className="text-lg font-bold mt-2">học viên đã tin tưởng</h3>
+          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+            Đã đạt band điểm mơ ước cùng IELTS Speaking Master qua các khoá luyện nói cá nhân hoá.
+          </p>
+          <div className="mt-4 flex items-center gap-3 justify-center lg:justify-start">
+            <div className="flex -space-x-2">
+              {["bg-rose-400","bg-amber-400","bg-emerald-400","bg-sky-400"].map((c,i)=>(
+                <div key={i} className={`h-7 w-7 rounded-full ${c} border-2 border-background`} />
+              ))}
+            </div>
+            <span className="text-xs text-muted-foreground">+ nhiều học viên khác</span>
+          </div>
         </div>
-        <p className="text-sm text-muted-foreground mt-1">đã đạt band điểm mơ ước cùng IELTS Speaking Master</p>
-      </div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-        {students.map((s, i) => (
-          <Card key={s.name} className="p-3 shadow-soft hover:shadow-elegant transition-shadow">
-            <div className={`aspect-square rounded-lg bg-gradient-to-br ${palette[i % palette.length]} flex items-center justify-center text-white font-bold text-lg mb-2`}>
-              {initials(s.name)}
-            </div>
-            <div className="text-xs font-medium truncate">{s.name}</div>
-            <div className="inline-block mt-1 text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
-              {s.band.toFixed(1)} OVERALL
-            </div>
-          </Card>
-        ))}
+
+        {/* Right: avatar collage */}
+        <div className="lg:col-span-2 grid grid-cols-4 sm:grid-cols-6 gap-2">
+          {students.map((s, i) => {
+            // alternating rounded shapes for variety
+            const shape = i % 3 === 0 ? "rounded-full" : i % 3 === 1 ? "rounded-2xl" : "rounded-[28%]";
+            const tones = [
+              "bg-primary text-primary-foreground",
+              "bg-accent text-accent-foreground",
+              "bg-secondary text-secondary-foreground",
+              "bg-gradient-primary text-primary-foreground",
+            ];
+            const tone = tones[i % tones.length];
+            const offset = i % 2 === 0 ? "" : "translate-y-3";
+            return (
+              <div key={s.name} className={`group relative ${offset}`}>
+                <div className={`aspect-square ${shape} ${tone} flex items-center justify-center font-bold text-base shadow-soft hover:shadow-elegant hover:scale-105 transition-all`}>
+                  {initials(s.name)}
+                </div>
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-md bg-background border text-[9px] font-bold text-primary shadow-soft whitespace-nowrap">
+                  {s.band.toFixed(1)}
+                </div>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-foreground text-background text-[10px] whitespace-nowrap z-10">
+                  {s.name}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
@@ -243,43 +315,79 @@ function StudentsWall() {
 
 function Testimonials() {
   const reviews = [
-    { name: "Phan Lệ Quỳnh Nhi", text: "Luyện thi với AI giúp em tự tin hơn rất nhiều. Câu hỏi sát đề thi thật, phản hồi nhanh và rất chi tiết." },
-    { name: "Lê Thị Hương", text: "Em chuẩn bị thi IELTS chỉ trong 2 tháng. Nhờ luyện speaking mỗi ngày trên app mà em đã đạt 7.5 overall!" },
-    { name: "Trần Thảo Giang", text: "Em không biết bắt đầu từ đâu, app gợi ý lộ trình rõ ràng. Em đặc biệt thích phần từ vựng theo chủ đề." },
-    { name: "Võ Thị Mỹ Hương", text: "Đã từng học ở nhiều trung tâm nhưng app này cho em sự linh hoạt và phản hồi cá nhân hoá tốt nhất." },
-    { name: "Đặng Quốc Bảo", text: "Phần chấm điểm rất công bằng. Em thấy được điểm yếu trong grammar và đã cải thiện rõ rệt sau 3 tuần." },
-    { name: "Hoàng Khánh Linh", text: "Giao diện đẹp, dễ dùng, luyện mọi lúc mọi nơi. Em đã từ band 6.0 lên 7.5 chỉ sau 6 tuần." },
+    { name: "Phan Lệ Quỳnh Nhi", text: "Luyện thi với AI giúp em tự tin hơn rất nhiều. Câu hỏi sát đề thi thật, phản hồi nhanh và rất chi tiết.", band: "7.5" },
+    { name: "Lê Thị Hương", text: "Em chuẩn bị thi IELTS chỉ trong 2 tháng. Nhờ luyện speaking mỗi ngày trên app mà em đã đạt 7.5 overall!", band: "7.5" },
+    { name: "Trần Thảo Giang", text: "Em không biết bắt đầu từ đâu, app gợi ý lộ trình rõ ràng. Em đặc biệt thích phần từ vựng theo chủ đề.", band: "7.0" },
+    { name: "Võ Thị Mỹ Hương", text: "Đã từng học ở nhiều trung tâm nhưng app này cho em sự linh hoạt và phản hồi cá nhân hoá tốt nhất.", band: "8.0" },
+    { name: "Đặng Quốc Bảo", text: "Phần chấm điểm rất công bằng. Em thấy được điểm yếu trong grammar và đã cải thiện rõ rệt sau 3 tuần.", band: "7.5" },
+    { name: "Hoàng Khánh Linh", text: "Giao diện đẹp, dễ dùng, luyện mọi lúc mọi nơi. Em đã từ band 6.0 lên 7.5 chỉ sau 6 tuần.", band: "7.5" },
   ];
+  const initials = (n: string) => n.split(" ").slice(-2).map((w) => w[0]).join("");
+  const accents = ["border-l-primary", "border-l-pink-500", "border-l-emerald-500", "border-l-amber-500", "border-l-violet-500", "border-l-sky-500"];
+
   return (
     <section className="mt-16">
-      <Card className="p-6 sm:p-10 bg-gradient-primary text-primary-foreground border-0 shadow-elegant">
-        <div className="grid lg:grid-cols-3 gap-8 items-start">
-          <div className="lg:col-span-1">
-            <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
+      {/* Header band */}
+      <div className="rounded-3xl bg-foreground text-background p-6 sm:p-8 mb-6 relative overflow-hidden">
+        <div className="absolute -right-10 -bottom-10 opacity-10">
+          <Heart className="h-48 w-48" />
+        </div>
+        <div className="relative grid sm:grid-cols-3 gap-6 items-center">
+          <div className="sm:col-span-2">
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] opacity-70">
+              <Award className="h-4 w-4" /> Học viên nói gì
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight mt-2">
               Được đánh giá cao bởi hàng trăm nghìn học viên đã và đang theo học
             </h2>
-            <p className="text-sm opacity-90 mt-3 leading-relaxed">
+            <p className="text-sm opacity-75 mt-3 max-w-xl">
               Đội ngũ AI của IELTS Speaking Master luôn lắng nghe phản hồi để hoàn thiện trải nghiệm,
               giúp bạn đạt mục tiêu band điểm một cách hiệu quả nhất.
             </p>
-            <div className="flex items-center gap-1 mt-4">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-yellow-300 text-yellow-300" />
-              ))}
-              <span className="ml-2 text-sm font-semibold">4.9 / 5</span>
-            </div>
           </div>
-          <div className="lg:col-span-2 grid sm:grid-cols-2 gap-3">
-            {reviews.map((r) => (
-              <div key={r.name} className="bg-background text-foreground rounded-xl p-4 shadow-soft">
-                <Quote className="h-4 w-4 text-primary mb-2" />
-                <p className="text-sm leading-relaxed">{r.text}</p>
-                <div className="text-xs font-semibold mt-3 text-primary">— {r.name}</div>
-              </div>
-            ))}
+          <div className="text-center sm:text-right">
+            <div className="text-6xl font-black">4.9</div>
+            <div className="flex items-center gap-0.5 justify-center sm:justify-end mt-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-4 w-4 fill-yellow-300 text-yellow-300" />
+              ))}
+            </div>
+            <div className="text-xs opacity-70 mt-1">trên 5 sao</div>
           </div>
         </div>
-      </Card>
+      </div>
+
+      {/* Reviews bento */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {reviews.map((r, i) => (
+          <Card
+            key={r.name}
+            className={`p-5 border-l-4 ${accents[i % accents.length]} shadow-soft hover:shadow-elegant transition-all hover:-translate-y-0.5`}
+          >
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 rounded-full bg-gradient-primary text-primary-foreground flex items-center justify-center font-bold text-sm shrink-0">
+                {initials(r.name)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="font-semibold text-sm truncate">{r.name}</div>
+                  <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded shrink-0">
+                    {r.band}
+                  </span>
+                </div>
+                <div className="flex items-center gap-0.5 mt-0.5">
+                  {[...Array(5)].map((_, k) => (
+                    <Star key={k} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+              </div>
+            </div>
+            <p className="text-sm leading-relaxed mt-3 text-muted-foreground">
+              "{r.text}"
+            </p>
+          </Card>
+        ))}
+      </div>
     </section>
   );
 }
