@@ -44,6 +44,9 @@ function HomePage() {
     <AppShell>
       <Hero onStart={() => navigate({ to: user ? "/speaking" : "/auth" })} signedIn={!!user} t={t} />
       <Features t={t} />
+      <TopStudent />
+      <StudentsWall />
+      <Testimonials />
       {user ? <SignedInPanel /> : <CallToAction onStart={() => navigate({ to: "/auth" })} t={t} />}
     </AppShell>
   );
