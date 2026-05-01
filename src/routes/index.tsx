@@ -15,6 +15,10 @@ import {
   Star,
   Quote,
   Users,
+  Trophy,
+  Award,
+  TrendingUp,
+  Heart,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
