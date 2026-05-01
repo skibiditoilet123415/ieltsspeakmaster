@@ -290,3 +290,130 @@ function SignedInPanel() {
     </section>
   );
 }
+
+function TopStudent() {
+  return (
+    <section className="mt-16">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl sm:text-3xl font-bold">Vinh danh học viên xuất sắc</h2>
+        <p className="text-sm text-muted-foreground mt-1">Học viên đạt band cao nhất tháng này</p>
+      </div>
+      <Card className="max-w-2xl mx-auto p-6 sm:p-8 bg-gradient-primary text-primary-foreground border-0 shadow-elegant">
+        <div className="flex flex-col sm:flex-row gap-6 items-center">
+          <div className="h-28 w-28 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center text-4xl font-bold shrink-0">
+            NG
+          </div>
+          <div className="flex-1 text-center sm:text-left">
+            <div className="text-xs uppercase tracking-wider opacity-80">Học viên tiêu biểu</div>
+            <div className="text-xl font-bold mt-1">Nguyễn Trần Ngân Giang</div>
+            <p className="text-sm opacity-90 mt-2 leading-relaxed">
+              "Em thấy rất hài lòng với phương pháp luyện nói của IELTS Speaking Master.
+              AI chấm điểm rất chi tiết, giúp em biết mình yếu ở đâu để cải thiện. Em đã đạt được band điểm mơ ước!"
+            </p>
+            <div className="flex items-center gap-4 mt-4 justify-center sm:justify-start">
+              <div className="text-3xl font-extrabold">8.0</div>
+              <div className="grid grid-cols-4 gap-2 text-[11px]">
+                <div className="text-center"><div className="opacity-75">Fluency</div><div className="font-bold">8.5</div></div>
+                <div className="text-center"><div className="opacity-75">Lexical</div><div className="font-bold">8.0</div></div>
+                <div className="text-center"><div className="opacity-75">Grammar</div><div className="font-bold">7.5</div></div>
+                <div className="text-center"><div className="opacity-75">Pron.</div><div className="font-bold">8.0</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </section>
+  );
+}
+
+function StudentsWall() {
+  const students = [
+    { name: "Phạm Tường Nguyên", band: 8.5 },
+    { name: "Đỗ Thuỳ Linh", band: 8.0 },
+    { name: "Trần Quang Minh", band: 7.5 },
+    { name: "Lê Bảo Ngọc", band: 8.0 },
+    { name: "Nguyễn Thanh Đạt", band: 7.5 },
+    { name: "Phan Hồng Nhung", band: 8.0 },
+    { name: "Vũ Hà Anh", band: 7.5 },
+    { name: "Hoàng Mai Phương", band: 8.5 },
+    { name: "Bùi Khánh Vy", band: 7.5 },
+    { name: "Đinh Hải Yến", band: 8.0 },
+    { name: "Ngô Minh Thư", band: 7.5 },
+    { name: "Trịnh Khả Hân", band: 8.0 },
+  ];
+  const initials = (n: string) => n.split(" ").slice(-2).map((w) => w[0]).join("");
+  const palette = [
+    "from-blue-500 to-indigo-500",
+    "from-pink-500 to-rose-500",
+    "from-emerald-500 to-teal-500",
+    "from-amber-500 to-orange-500",
+    "from-violet-500 to-purple-500",
+    "from-cyan-500 to-sky-500",
+  ];
+  return (
+    <section className="mt-12">
+      <div className="text-center mb-6">
+        <div className="inline-flex items-center gap-2 text-primary font-bold text-2xl sm:text-3xl">
+          <Users className="h-6 w-6" /> 100.000+ học viên
+        </div>
+        <p className="text-sm text-muted-foreground mt-1">đã đạt band điểm mơ ước cùng IELTS Speaking Master</p>
+      </div>
+      <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+        {students.map((s, i) => (
+          <Card key={s.name} className="p-3 shadow-soft hover:shadow-elegant transition-shadow">
+            <div className={`aspect-square rounded-lg bg-gradient-to-br ${palette[i % palette.length]} flex items-center justify-center text-white font-bold text-lg mb-2`}>
+              {initials(s.name)}
+            </div>
+            <div className="text-xs font-medium truncate">{s.name}</div>
+            <div className="inline-block mt-1 text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded">
+              {s.band.toFixed(1)} OVERALL
+            </div>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  const reviews = [
+    { name: "Phan Lệ Quỳnh Nhi", text: "Luyện thi với AI giúp em tự tin hơn rất nhiều. Câu hỏi sát đề thi thật, phản hồi nhanh và rất chi tiết." },
+    { name: "Lê Thị Hương", text: "Em chuẩn bị thi IELTS chỉ trong 2 tháng. Nhờ luyện speaking mỗi ngày trên app mà em đã đạt 7.5 overall!" },
+    { name: "Trần Thảo Giang", text: "Em không biết bắt đầu từ đâu, app gợi ý lộ trình rõ ràng. Em đặc biệt thích phần từ vựng theo chủ đề." },
+    { name: "Võ Thị Mỹ Hương", text: "Đã từng học ở nhiều trung tâm nhưng app này cho em sự linh hoạt và phản hồi cá nhân hoá tốt nhất." },
+    { name: "Đặng Quốc Bảo", text: "Phần chấm điểm rất công bằng. Em thấy được điểm yếu trong grammar và đã cải thiện rõ rệt sau 3 tuần." },
+    { name: "Hoàng Khánh Linh", text: "Giao diện đẹp, dễ dùng, luyện mọi lúc mọi nơi. Em đã từ band 6.0 lên 7.5 chỉ sau 6 tuần." },
+  ];
+  return (
+    <section className="mt-16">
+      <Card className="p-6 sm:p-10 bg-gradient-primary text-primary-foreground border-0 shadow-elegant">
+        <div className="grid lg:grid-cols-3 gap-8 items-start">
+          <div className="lg:col-span-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
+              Được đánh giá cao bởi hàng trăm nghìn học viên đã và đang theo học
+            </h2>
+            <p className="text-sm opacity-90 mt-3 leading-relaxed">
+              Đội ngũ AI của IELTS Speaking Master luôn lắng nghe phản hồi để hoàn thiện trải nghiệm,
+              giúp bạn đạt mục tiêu band điểm một cách hiệu quả nhất.
+            </p>
+            <div className="flex items-center gap-1 mt-4">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-5 w-5 fill-yellow-300 text-yellow-300" />
+              ))}
+              <span className="ml-2 text-sm font-semibold">4.9 / 5</span>
+            </div>
+          </div>
+          <div className="lg:col-span-2 grid sm:grid-cols-2 gap-3">
+            {reviews.map((r) => (
+              <div key={r.name} className="bg-background text-foreground rounded-xl p-4 shadow-soft">
+                <Quote className="h-4 w-4 text-primary mb-2" />
+                <p className="text-sm leading-relaxed">{r.text}</p>
+                <div className="text-xs font-semibold mt-3 text-primary">— {r.name}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+    </section>
+  );
+}
