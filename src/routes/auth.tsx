@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Mic } from "lucide-react";
+import logoUrl from "@/assets/logo.png";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — IELTS Speaking AI" }] }),
@@ -66,9 +66,7 @@ function AuthPage() {
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md bg-card rounded-2xl shadow-elegant p-8">
         <div className="flex items-center gap-3 mb-6">
-          <div className="h-10 w-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Mic className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img src={logoUrl} alt="IELTS Speaking Master logo" className="h-11 w-11 rounded-xl object-contain" />
           <div>
             <div className="font-bold">{t("app.name")}</div>
             <div className="text-xs text-muted-foreground">{t("app.tagline")}</div>

@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Mic, LogOut, Moon, Sun, Languages, Settings as SettingsIcon } from "lucide-react";
+import { LogOut, Moon, Sun, Languages, Settings as SettingsIcon } from "lucide-react";
+import logoUrl from "@/assets/logo.png";
 import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
@@ -34,9 +35,7 @@ export function TopNav() {
       <div className="mx-auto max-w-6xl bg-card/95 backdrop-blur border border-border rounded-full shadow-elegant h-14 pl-4 pr-2 flex items-center gap-2">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0 pr-2">
-          <div className="h-8 w-8 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Mic className="h-4 w-4 text-primary-foreground" />
-          </div>
+          <img src={logoUrl} alt="IELTS Speaking Master logo" className="h-9 w-9 rounded-xl object-contain" />
           <span className="hidden sm:block text-sm font-extrabold tracking-tight">IELTS Speaking <span className="text-primary">Master</span></span>
         </Link>
 
