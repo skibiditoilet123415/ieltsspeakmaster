@@ -19,6 +19,12 @@ import {
   Award,
   TrendingUp,
   Heart,
+  Headphones,
+  Waves,
+  Zap,
+  PlayCircle,
+  GraduationCap,
+  Globe2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/")({
