@@ -205,3 +205,20 @@
   -webkit-backface-visibility: hidden;
 }
 .flip-back { transform: rotateY(180deg); }
+
+/* Click ripple */
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
+}
+.ripple-ink {
+  position: absolute;
+  border-radius: 9999px;
+  transform: scale(0);
+  background: color-mix(in oklab, currentColor 35%, transparent);
+  pointer-events: none;
+  animation: ripple 600ms ease-out forwards;
+  mix-blend-mode: overlay;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ripple-ink { animation: none !important; display: none; }
+}
