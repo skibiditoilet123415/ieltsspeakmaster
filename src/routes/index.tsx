@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Reveal, CountUp } from "@/components/Reveal";
 import {
   Mic,
   Sparkles,
@@ -49,13 +50,13 @@ function HomePage() {
   return (
     <AppShell>
       <Hero onStart={() => navigate({ to: user ? "/speaking" : "/auth" })} signedIn={!!user} t={t} />
-      <StatsBand />
-      <Features t={t} />
-      <TrendShowcase />
-      <TopStudent />
-      <StudentsWall />
-      <Testimonials />
-      {!user && <CallToAction onStart={() => navigate({ to: "/auth" })} t={t} />}
+      <Reveal><StatsBand /></Reveal>
+      <Reveal direction="up"><Features t={t} /></Reveal>
+      <Reveal direction="zoom"><TrendShowcase /></Reveal>
+      <Reveal direction="left"><TopStudent /></Reveal>
+      <Reveal direction="right"><StudentsWall /></Reveal>
+      <Reveal><Testimonials /></Reveal>
+      {!user && <Reveal direction="zoom"><CallToAction onStart={() => navigate({ to: "/auth" })} t={t} /></Reveal>}
     </AppShell>
   );
 }
@@ -114,8 +115,8 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
 
         {/* RIGHT: floating chat-mock card */}
         <div className="lg:col-span-5 relative">
-          <div className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full" aria-hidden />
-          <div className="relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover:rotate-0 transition-transform">
+          <div className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full animate-blob" aria-hidden />
+          <div className="relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover-lift animate-float-slow">
             <div className="flex items-center justify-between text-xs">
               <div className="inline-flex items-center gap-2 font-semibold">
                 <span className="h-8 w-8 rounded-full bg-gradient-primary flex items-center justify-center">
@@ -133,9 +134,13 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
               </div>
               <div className="rounded-2xl rounded-tr-sm bg-gradient-primary text-primary-foreground px-4 py-3 text-sm ml-8 shadow-soft">
                 I'd love to talk about a small café near my home in Hà Nội…
-                <div className="mt-2 flex items-center gap-1">
+                <div className="mt-2 flex items-center gap-1 bar-eq">
                   {[3,5,8,6,9,7,4,8,6,5,7,9].map((h,i)=>(
-                    <span key={i} style={{ height: `${h*2}px` }} className="w-1 rounded bg-primary-foreground/70" />
+                    <span
+                      key={i}
+                      style={{ height: `${h*2}px`, animationDelay: `${i*80}ms` }}
+                      className="w-1 rounded bg-primary-foreground/70"
+                    />
                   ))}
                 </div>
               </div>
@@ -156,7 +161,7 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
             </div>
           </div>
 
-          <div className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 -rotate-3">
+          <div className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 animate-float-tag">
             <div className="h-10 w-10 rounded-full bg-success/15 flex items-center justify-center">
               <Zap className="h-5 w-5 text-success" />
             </div>
@@ -173,24 +178,24 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
 
 function StatsBand() {
   const stats = [
-    { icon: Users, value: "100K+", label: "học viên" },
-    { icon: GraduationCap, value: "85%", label: "đạt mục tiêu" },
-    { icon: Globe2, value: "30+", label: "quốc gia" },
-    { icon: Star, value: "4.9/5", label: "đánh giá" },
+    { icon: Users, value: <><CountUp to={100} />K+</>, label: "học viên" },
+    { icon: GraduationCap, value: <><CountUp to={85} />%</>, label: "đạt mục tiêu" },
+    { icon: Globe2, value: <><CountUp to={30} />+</>, label: "quốc gia" },
+    { icon: Star, value: <><CountUp to={4.9} decimals={1} />/5</>, label: "đánh giá" },
   ];
   return (
     <section className="mt-14">
       <div className="rounded-2xl border bg-card divide-y sm:divide-y-0 sm:divide-x sm:grid sm:grid-cols-4 overflow-hidden shadow-soft">
-        {stats.map(({ icon: Icon, value, label }) => (
-          <div key={label} className="p-5 flex items-center gap-4">
-            <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        {stats.map(({ icon: Icon, value, label }, i) => (
+          <Reveal key={label} delay={i * 80} direction="up" className="p-5 flex items-center gap-4 hover:bg-accent/20 transition-colors">
+            <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-transform hover:scale-110 hover:rotate-6">
               <Icon className="h-5 w-5" />
             </div>
             <div>
               <div className="text-2xl font-extrabold leading-none">{value}</div>
               <div className="text-xs text-muted-foreground mt-1">{label}</div>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>
@@ -267,9 +272,9 @@ function TrendShowcase() {
                 </linearGradient>
               </defs>
               <path d={area} fill="url(#heroTrend)" />
-              <path d={path} fill="none" stroke="white" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+              <path className="draw-path" d={path} fill="none" stroke="white" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
               {xs.map((x, i) => (
-                <circle key={i} cx={x} cy={ys[i]} r="3" fill="white" />
+                <circle key={i} cx={x} cy={ys[i]} r="3" fill="white" style={{ animation: `fade-in 0.4s ease-out ${0.5 + i * 0.2}s both` }} />
               ))}
             </svg>
           </div>

@@ -143,6 +143,51 @@
   .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
 }
 
+/* Smooth modern animations */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(1deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+@keyframes float-tag {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-6px) rotate(-3deg); }
+}
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes blob {
+  0%, 100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(20px,-20px) scale(1.1); }
+  66% { transform: translate(-15px,15px) scale(0.95); }
+}
+@keyframes bar-pulse {
+  0%, 100% { transform: scaleY(0.6); }
+  50% { transform: scaleY(1); }
+}
+.animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+.animate-float-tag { animation: float-tag 5s ease-in-out infinite; }
+.animate-blob { animation: blob 14s ease-in-out infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 20%, transparent), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2.5s linear infinite;
+}
+.draw-path {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: draw-line 2.2s ease-out 0.3s forwards;
+}
+.bar-eq > span { transform-origin: bottom; animation: bar-pulse 1.1s ease-in-out infinite; }
+.hover-lift { transition: transform .3s ease, box-shadow .3s ease; }
+.hover-lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-elegant); }
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow, .animate-float-tag, .animate-blob, .animate-shimmer, .draw-path, .bar-eq > span { animation: none !important; }
+}
+
 /* Flashcard flip */
 .flip-card { perspective: 1200px; }
 .flip-inner {
