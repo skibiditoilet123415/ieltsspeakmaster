@@ -4,6 +4,7 @@ import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Reveal, CountUp } from "@/components/Reveal";
 import {
   Mic,
   Sparkles,
