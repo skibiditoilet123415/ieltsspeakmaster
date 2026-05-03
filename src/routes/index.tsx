@@ -178,24 +178,24 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
 
 function StatsBand() {
   const stats = [
-    { icon: Users, value: "100K+", label: "học viên" },
-    { icon: GraduationCap, value: "85%", label: "đạt mục tiêu" },
-    { icon: Globe2, value: "30+", label: "quốc gia" },
-    { icon: Star, value: "4.9/5", label: "đánh giá" },
+    { icon: Users, value: <><CountUp to={100} />K+</>, label: "học viên" },
+    { icon: GraduationCap, value: <><CountUp to={85} />%</>, label: "đạt mục tiêu" },
+    { icon: Globe2, value: <><CountUp to={30} />+</>, label: "quốc gia" },
+    { icon: Star, value: <><CountUp to={4.9} decimals={1} />/5</>, label: "đánh giá" },
   ];
   return (
     <section className="mt-14">
       <div className="rounded-2xl border bg-card divide-y sm:divide-y-0 sm:divide-x sm:grid sm:grid-cols-4 overflow-hidden shadow-soft">
-        {stats.map(({ icon: Icon, value, label }) => (
-          <div key={label} className="p-5 flex items-center gap-4">
-            <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        {stats.map(({ icon: Icon, value, label }, i) => (
+          <Reveal key={label} delay={i * 80} direction="up" className="p-5 flex items-center gap-4 hover:bg-accent/20 transition-colors">
+            <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-transform hover:scale-110 hover:rotate-6">
               <Icon className="h-5 w-5" />
             </div>
             <div>
               <div className="text-2xl font-extrabold leading-none">{value}</div>
               <div className="text-xs text-muted-foreground mt-1">{label}</div>
             </div>
-          </div>
+          </Reveal>
         ))}
       </div>
     </section>
