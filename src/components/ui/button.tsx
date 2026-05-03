@@ -37,10 +37,32 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, onClick, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      const target = e.currentTarget as HTMLElement;
+      const rect = target.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const ink = document.createElement("span");
+      ink.className = "ripple-ink";
+      ink.style.width = ink.style.height = `${size}px`;
+      ink.style.left = `${e.clientX - rect.left - size / 2}px`;
+      ink.style.top = `${e.clientY - rect.top - size / 2}px`;
+      target.appendChild(ink);
+      setTimeout(() => ink.remove(), 650);
+      onClick?.(e);
+    };
+
     return (
-      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        onClick={handleClick}
+        {...props}
+      >
+        {children}
+      </Comp>
     );
   },
 );
