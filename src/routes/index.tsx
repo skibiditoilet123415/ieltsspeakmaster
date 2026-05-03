@@ -50,13 +50,13 @@ function HomePage() {
   return (
     <AppShell>
       <Hero onStart={() => navigate({ to: user ? "/speaking" : "/auth" })} signedIn={!!user} t={t} />
-      <StatsBand />
-      <Features t={t} />
-      <TrendShowcase />
-      <TopStudent />
-      <StudentsWall />
-      <Testimonials />
-      {!user && <CallToAction onStart={() => navigate({ to: "/auth" })} t={t} />}
+      <Reveal><StatsBand /></Reveal>
+      <Reveal direction="up"><Features t={t} /></Reveal>
+      <Reveal direction="zoom"><TrendShowcase /></Reveal>
+      <Reveal direction="left"><TopStudent /></Reveal>
+      <Reveal direction="right"><StudentsWall /></Reveal>
+      <Reveal><Testimonials /></Reveal>
+      {!user && <Reveal direction="zoom"><CallToAction onStart={() => navigate({ to: "/auth" })} t={t} /></Reveal>}
     </AppShell>
   );
 }
