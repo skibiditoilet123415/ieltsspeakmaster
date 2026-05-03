@@ -115,8 +115,8 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
 
         {/* RIGHT: floating chat-mock card */}
         <div className="lg:col-span-5 relative">
-          <div className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full" aria-hidden />
-          <div className="relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover:rotate-0 transition-transform">
+          <div className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full animate-blob" aria-hidden />
+          <div className="relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover-lift animate-float-slow">
             <div className="flex items-center justify-between text-xs">
               <div className="inline-flex items-center gap-2 font-semibold">
                 <span className="h-8 w-8 rounded-full bg-gradient-primary flex items-center justify-center">
@@ -134,9 +134,13 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
               </div>
               <div className="rounded-2xl rounded-tr-sm bg-gradient-primary text-primary-foreground px-4 py-3 text-sm ml-8 shadow-soft">
                 I'd love to talk about a small café near my home in Hà Nội…
-                <div className="mt-2 flex items-center gap-1">
+                <div className="mt-2 flex items-center gap-1 bar-eq">
                   {[3,5,8,6,9,7,4,8,6,5,7,9].map((h,i)=>(
-                    <span key={i} style={{ height: `${h*2}px` }} className="w-1 rounded bg-primary-foreground/70" />
+                    <span
+                      key={i}
+                      style={{ height: `${h*2}px`, animationDelay: `${i*80}ms` }}
+                      className="w-1 rounded bg-primary-foreground/70"
+                    />
                   ))}
                 </div>
               </div>
@@ -157,7 +161,7 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
             </div>
           </div>
 
-          <div className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 -rotate-3">
+          <div className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 animate-float-tag">
             <div className="h-10 w-10 rounded-full bg-success/15 flex items-center justify-center">
               <Zap className="h-5 w-5 text-success" />
             </div>
