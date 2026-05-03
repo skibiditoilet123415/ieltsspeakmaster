@@ -272,9 +272,9 @@ function TrendShowcase() {
                 </linearGradient>
               </defs>
               <path d={area} fill="url(#heroTrend)" />
-              <path d={path} fill="none" stroke="white" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+              <path className="draw-path" d={path} fill="none" stroke="white" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
               {xs.map((x, i) => (
-                <circle key={i} cx={x} cy={ys[i]} r="3" fill="white" />
+                <circle key={i} cx={x} cy={ys[i]} r="3" fill="white" style={{ animation: `fade-in 0.4s ease-out ${0.5 + i * 0.2}s both` }} />
               ))}
             </svg>
           </div>
