@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { createSTT, speak, stopSpeaking } from "@/lib/voice";
 import { ProgressPanel } from "@/components/ProgressPanel";
+import { SelectTopicMenu } from "@/components/SelectTopicMenu";
 import { Mic, Square, Send, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -302,34 +303,12 @@ function Speaking() {
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           />
 
-          <div>
-            <div className="text-xs font-medium text-muted-foreground mb-2">Categories</div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setCategory("all")}
-                className={`whitespace-nowrap rounded-full px-3 py-1 text-xs border transition-colors ${
-                  category === "all"
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "border-border text-muted-foreground hover:border-primary/40"
-                }`}
-              >
-                All ({topics.length})
-              </button>
-              {categories.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCategory(c)}
-                  className={`whitespace-nowrap rounded-full px-3 py-1 text-xs border transition-colors ${
-                    category === c
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "border-border text-muted-foreground hover:border-primary/40"
-                  }`}
-                >
-                  {c} ({counts[c]})
-                </button>
-              ))}
-            </div>
-          </div>
+          <SelectTopicMenu
+            value={category}
+            onChange={setCategory}
+            totalCount={topics.length}
+            options={categories.map((c) => ({ value: c, label: c, count: counts[c] }))}
+          />
 
           <Button
             variant="outline"
