@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Mic, BookOpen, Settings as SettingsIcon } from "lucide-react";
+import { Mic, BookOpen, Settings as SettingsIcon, Lightbulb } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 
 export function BottomNav() {
@@ -9,6 +9,7 @@ export function BottomNav() {
 
   const isSpeaking = path === "/" || path.startsWith("/speaking") || path.startsWith("/history");
   const isVocab = path.startsWith("/vocabulary") || path.startsWith("/flashcards");
+  const isTips = path.startsWith("/tips");
   const isSettings = path.startsWith("/settings");
 
   const item = (active: boolean) =>
@@ -33,6 +34,10 @@ export function BottomNav() {
             <BookOpen className="h-5 w-5" />
           </div>
           <span className="text-xs font-medium">{t("nav.vocab")}</span>
+        </Link>
+        <Link to="/tips" className={item(isTips)}>
+          <Lightbulb className="h-5 w-5" />
+          <span className="text-xs font-medium">Tips</span>
         </Link>
         <Link to="/settings" className={item(isSettings)}>
           <SettingsIcon className="h-5 w-5" />
