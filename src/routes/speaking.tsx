@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { createSTT, speak, stopSpeaking } from "@/lib/voice";
 import { ProgressPanel } from "@/components/ProgressPanel";
+import { SelectTopicMenu } from "@/components/SelectTopicMenu";
 import { Mic, Square, Send, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
