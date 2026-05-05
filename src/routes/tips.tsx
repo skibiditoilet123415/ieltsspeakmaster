@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/Reveal";
-import { Lightbulb, Mic, MessageCircle, BookOpen, Sparkles, Clock, Target, CheckCircle2 } from "lucide-react";
+import { Lightbulb, Mic, MessageCircle, BookOpen, Sparkles, Clock, Target, CheckCircle2, Play } from "lucide-react";
 
 export const Route = createFileRoute("/tips")({
   head: () => ({
@@ -71,6 +71,28 @@ function SectionHeader({ icon: Icon, eyebrow, title, desc }: any) {
 }
 
 function TipsPage() {
+  const navigate = useNavigate();
+
+  const startSession = (tp: {
+    title: string;
+    category: string;
+    part1_questions?: string[];
+    part2_cue?: { prompt: string; points: string[] };
+  }) => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(
+        "pendingSpeakingTopic",
+        JSON.stringify({
+          id: null,
+          difficulty: 6,
+          part1_questions: [],
+          ...tp,
+        }),
+      );
+    }
+    navigate({ to: "/speaking" });
+  };
+
   return (
     <AppShell>
       <Reveal>
@@ -123,8 +145,21 @@ function TipsPage() {
         />
         <div className="grid grid-cols-1 gap-3 mb-4">
           {part1Topics.map((t) => (
-            <Card key={t.title} className="p-4">
-              <div className="font-semibold text-sm">{t.title}</div>
+            <Card
+              key={t.title}
+              onClick={() =>
+                startSession({
+                  title: t.title,
+                  category: "Part 1",
+                  part1_questions: t.qs,
+                })
+              }
+              className="p-4 cursor-pointer hover:shadow-elegant hover:-translate-y-0.5 transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-semibold text-sm">{t.title}</div>
+                <Play className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 {t.qs.map((q) => (
                   <li key={q} className="flex gap-2">
@@ -155,8 +190,24 @@ function TipsPage() {
         />
         <div className="grid grid-cols-1 gap-3 mb-4">
           {part2Cues.map((c) => (
-            <Card key={c.title} className="p-4">
-              <div className="font-semibold text-sm">{c.title}</div>
+            <Card
+              key={c.title}
+              onClick={() =>
+                startSession({
+                  title: c.title,
+                  category: "Part 2",
+                  part1_questions: [
+                    `Describe ${c.title.toLowerCase()}. You should say: ${c.points.join("; ")}. You have 1 minute to prepare, then speak for 1–2 minutes.`,
+                  ],
+                  part2_cue: { prompt: `Describe ${c.title.toLowerCase()}.`, points: c.points },
+                })
+              }
+              className="p-4 cursor-pointer hover:shadow-elegant hover:-translate-y-0.5 transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-semibold text-sm">{c.title}</div>
+                <Play className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
               <div className="text-xs text-muted-foreground mt-1">You should say:</div>
               <ul className="mt-1 space-y-1 text-sm">
                 {c.points.map((p) => (
@@ -187,8 +238,21 @@ function TipsPage() {
         />
         <div className="grid grid-cols-1 gap-3 mb-4">
           {part3Topics.map((t) => (
-            <Card key={t.title} className="p-4">
-              <div className="font-semibold text-sm">{t.title}</div>
+            <Card
+              key={t.title}
+              onClick={() =>
+                startSession({
+                  title: t.title,
+                  category: "Part 3",
+                  part1_questions: t.qs,
+                })
+              }
+              className="p-4 cursor-pointer hover:shadow-elegant hover:-translate-y-0.5 transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-semibold text-sm">{t.title}</div>
+                <Play className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 {t.qs.map((q) => (
                   <li key={q} className="flex gap-2">
