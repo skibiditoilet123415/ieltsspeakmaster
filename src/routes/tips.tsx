@@ -71,6 +71,28 @@ function SectionHeader({ icon: Icon, eyebrow, title, desc }: any) {
 }
 
 function TipsPage() {
+  const navigate = useNavigate();
+
+  const startSession = (tp: {
+    title: string;
+    category: string;
+    part1_questions?: string[];
+    part2_cue?: { prompt: string; points: string[] };
+  }) => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(
+        "pendingSpeakingTopic",
+        JSON.stringify({
+          id: null,
+          difficulty: 6,
+          part1_questions: [],
+          ...tp,
+        }),
+      );
+    }
+    navigate({ to: "/speaking" });
+  };
+
   return (
     <AppShell>
       <Reveal>
