@@ -17,6 +17,7 @@ import { Route as HistoryRouteImport } from './routes/history'
 import { Route as FlashcardsRouteImport } from './routes/flashcards'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TopicTopicIdRouteImport } from './routes/topic.$topicId'
 
 const VocabularyRoute = VocabularyRouteImport.update({
   id: '/vocabulary',
@@ -58,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TopicTopicIdRoute = TopicTopicIdRouteImport.update({
+  id: '/topic/$topicId',
+  path: '/topic/$topicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
   '/vocabulary': typeof VocabularyRoute
+  '/topic/$topicId': typeof TopicTopicIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
   '/vocabulary': typeof VocabularyRoute
+  '/topic/$topicId': typeof TopicTopicIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
   '/vocabulary': typeof VocabularyRoute
+  '/topic/$topicId': typeof TopicTopicIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/tips'
     | '/vocabulary'
+    | '/topic/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/tips'
     | '/vocabulary'
+    | '/topic/$topicId'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/speaking'
     | '/tips'
     | '/vocabulary'
+    | '/topic/$topicId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   SpeakingRoute: typeof SpeakingRoute
   TipsRoute: typeof TipsRoute
   VocabularyRoute: typeof VocabularyRoute
+  TopicTopicIdRoute: typeof TopicTopicIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/topic/$topicId': {
+      id: '/topic/$topicId'
+      path: '/topic/$topicId'
+      fullPath: '/topic/$topicId'
+      preLoaderRoute: typeof TopicTopicIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,16 +224,8 @@ const rootRouteChildren: RootRouteChildren = {
   SpeakingRoute: SpeakingRoute,
   TipsRoute: TipsRoute,
   VocabularyRoute: VocabularyRoute,
+  TopicTopicIdRoute: TopicTopicIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
