@@ -194,6 +194,44 @@ export type Database = {
           },
         ]
       }
+      topic_lessons: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          kind: string
+          position: number
+          title: string
+          topic_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          kind: string
+          position: number
+          title: string
+          topic_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          position?: number
+          title?: string
+          topic_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "topic_lessons_topic_id_fkey"
+            columns: ["topic_id"]
+            isOneToOne: false
+            referencedRelation: "topics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       topics: {
         Row: {
           category: string
@@ -302,6 +340,11 @@ export type Database = {
     Functions: {
       award_xp: { Args: { amount: number }; Returns: Json }
       consume_daily_test: { Args: never; Returns: Json }
+      is_free_topic: { Args: { _topic_id: string }; Returns: boolean }
+      seed_topic_lessons: {
+        Args: { _category: string; _title: string; _topic_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
