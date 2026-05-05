@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
+import { Play } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/Reveal";
 import { Lightbulb, Mic, MessageCircle, BookOpen, Sparkles, Clock, Target, CheckCircle2 } from "lucide-react";
