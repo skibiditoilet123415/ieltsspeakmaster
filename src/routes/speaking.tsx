@@ -12,7 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { createSTT, speak, stopSpeaking } from "@/lib/voice";
 import { ProgressPanel } from "@/components/ProgressPanel";
 import { SelectTopicMenu } from "@/components/SelectTopicMenu";
-import { Mic, Square, Send, Sparkles } from "lucide-react";
+import { Paywall } from "@/components/Paywall";
+import { useIsPremium, freeTopicIds } from "@/lib/premium";
+import { Mic, Square, Send, Sparkles, Lock, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/speaking")({
