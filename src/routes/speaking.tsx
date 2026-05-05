@@ -302,14 +302,24 @@ function Speaking() {
         (category === "all" || tp.category === category) &&
         tp.title.toLowerCase().includes(search.toLowerCase()),
     );
+    const freeIds = freeTopicIds(topics);
+    const isLocked = (tp: any) => !isPremium && !freeIds.has(tp.id);
+
+    const openTopic = (tp: any) => {
+      if (isLocked(tp)) { setPaywallTopic(tp); return; }
+      navigate({ to: "/topic/$topicId", params: { topicId: tp.id } });
+    };
 
     return (
       <AppShell>
+        <Paywall open={!!paywallTopic} onOpenChange={(o) => !o && setPaywallTopic(null)} topicTitle={paywallTopic?.title} />
         <div className="mb-6">
           <ProgressPanel />
         </div>
         <h1 className="text-xl font-bold mb-1">{t("speaking.pick_topic")}</h1>
-        <p className="text-xs text-muted-foreground mb-3">{topics.length} topics available</p>
+        <p className="text-xs text-muted-foreground mb-3">
+          {topics.length} topics · {isPremium ? "All unlocked" : `${freeIds.size} free, ${topics.length - freeIds.size} premium`}
+        </p>
 
         <div className="space-y-3 mb-4">
           <input
@@ -331,8 +341,10 @@ function Speaking() {
             variant="outline"
             className="w-full"
             onClick={() => {
-              if (!filtered.length) return;
-              startWithTopic(filtered[Math.floor(Math.random() * filtered.length)]);
+              const pool = filtered.filter((tp) => !isLocked(tp));
+              if (!pool.length) { setPaywallTopic(filtered[0] || null); return; }
+              const pick = pool[Math.floor(Math.random() * pool.length)];
+              startWithTopic(pick);
             }}
           >
             🎲 {t("speaking.random")}
@@ -347,23 +359,37 @@ function Speaking() {
         </div>
 
         <div className="grid grid-cols-1 gap-2">
-          {filtered.map((tp) => (
-            <Card
-              key={tp.id}
-              className="p-4 cursor-pointer hover:shadow-elegant transition-shadow"
-              onClick={() => startWithTopic(tp)}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-semibold">{tp.title}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {tp.category} · Band {tp.difficulty}
+          {filtered.map((tp) => {
+            const locked = isLocked(tp);
+            return (
+              <Card
+                key={tp.id}
+                className={`p-4 cursor-pointer hover:shadow-elegant transition-all hover:-translate-y-0.5 ${locked ? "opacity-80" : ""}`}
+                onClick={() => openTopic(tp)}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <div className="font-semibold truncate">{tp.title}</div>
+                      {locked && (
+                        <span className="inline-flex items-center gap-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-semibold px-1.5 py-0.5 shrink-0">
+                          <Lock className="h-2.5 w-2.5" /> PRO
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      {tp.category} · Band {tp.difficulty} · 5 lessons
+                    </div>
                   </div>
+                  {locked ? (
+                    <Lock className="h-4 w-4 text-muted-foreground shrink-0" />
+                  ) : (
+                    <BookOpen className="h-4 w-4 text-primary shrink-0" />
+                  )}
                 </div>
-                <Mic className="h-4 w-4 text-primary" />
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
           {filtered.length === 0 && (
             <div className="text-center text-sm text-muted-foreground py-8">
               No topics match your search.
