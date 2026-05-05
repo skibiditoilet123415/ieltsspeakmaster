@@ -190,8 +190,24 @@ function TipsPage() {
         />
         <div className="grid grid-cols-1 gap-3 mb-4">
           {part2Cues.map((c) => (
-            <Card key={c.title} className="p-4">
-              <div className="font-semibold text-sm">{c.title}</div>
+            <Card
+              key={c.title}
+              onClick={() =>
+                startSession({
+                  title: c.title,
+                  category: "Part 2",
+                  part1_questions: [
+                    `Describe ${c.title.toLowerCase()}. You should say: ${c.points.join("; ")}. You have 1 minute to prepare, then speak for 1–2 minutes.`,
+                  ],
+                  part2_cue: { prompt: `Describe ${c.title.toLowerCase()}.`, points: c.points },
+                })
+              }
+              className="p-4 cursor-pointer hover:shadow-elegant hover:-translate-y-0.5 transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-semibold text-sm">{c.title}</div>
+                <Play className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
               <div className="text-xs text-muted-foreground mt-1">You should say:</div>
               <ul className="mt-1 space-y-1 text-sm">
                 {c.points.map((p) => (
