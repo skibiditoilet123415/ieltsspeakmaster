@@ -145,8 +145,21 @@ function TipsPage() {
         />
         <div className="grid grid-cols-1 gap-3 mb-4">
           {part1Topics.map((t) => (
-            <Card key={t.title} className="p-4">
-              <div className="font-semibold text-sm">{t.title}</div>
+            <Card
+              key={t.title}
+              onClick={() =>
+                startSession({
+                  title: t.title,
+                  category: "Part 1",
+                  part1_questions: t.qs,
+                })
+              }
+              className="p-4 cursor-pointer hover:shadow-elegant hover:-translate-y-0.5 transition-all group"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-semibold text-sm">{t.title}</div>
+                <Play className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 {t.qs.map((q) => (
                   <li key={q} className="flex gap-2">
