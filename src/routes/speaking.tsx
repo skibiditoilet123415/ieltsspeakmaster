@@ -43,6 +43,8 @@ function Speaking() {
   const [knownVocab, setKnownVocab] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<string>("all");
+  const [paywallTopic, setPaywallTopic] = useState<any | null>(null);
+  const { isPremium } = useIsPremium();
   const sttRef = useRef<ReturnType<typeof createSTT> | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
