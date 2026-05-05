@@ -48,6 +48,19 @@ function Speaking() {
     supabase.from("topics").select("*").order("difficulty", { ascending: true }).then(({ data }) => setTopics(data || []));
   }, []);
 
+  // Auto-start when a topic is handed off from the Tips page
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = sessionStorage.getItem("pendingSpeakingTopic");
+    if (!raw) return;
+    sessionStorage.removeItem("pendingSpeakingTopic");
+    try {
+      const tp = JSON.parse(raw);
+      startWithTopic(tp);
+    } catch {/* ignore */}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (!user) return;
     supabase.from("vocabulary").select("word").eq("user_id", user.id).then(({ data }) => {
