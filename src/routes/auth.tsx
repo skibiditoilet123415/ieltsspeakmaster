@@ -125,6 +125,7 @@ function AuthPage() {
         <Button variant="outline" className="w-full" onClick={google}>
           {t("auth.google")}
         </Button>
+        </div>
       </div>
     </div>
   );
