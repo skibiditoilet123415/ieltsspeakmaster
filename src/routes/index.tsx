@@ -178,9 +178,8 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
 
 function StatsBand() {
   const stats = [
-    { icon: Users, value: <><CountUp to={100} />K+</>, label: "học viên" },
-    { icon: GraduationCap, value: <><CountUp to={85} />%</>, label: "đạt mục tiêu" },
-    { icon: Globe2, value: <><CountUp to={30} />+</>, label: "quốc gia" },
+    { icon: Users, value: <><CountUp to={50} />K+</>, label: "học viên" },
+    { icon: GraduationCap, value: <><CountUp to={90} />%</>, label: "đạt mục tiêu" },
     { icon: Star, value: <><CountUp to={4.9} decimals={1} />/5</>, label: "đánh giá" },
   ];
   return (
