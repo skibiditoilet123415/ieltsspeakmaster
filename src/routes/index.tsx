@@ -184,7 +184,7 @@ function StatsBand() {
   ];
   return (
     <section className="mt-14">
-      <div className="rounded-2xl border bg-card divide-y sm:divide-y-0 sm:divide-x sm:grid sm:grid-cols-4 overflow-hidden shadow-soft">
+      <div className="rounded-2xl border bg-card divide-y sm:divide-y-0 sm:divide-x sm:grid sm:grid-cols-3 overflow-hidden shadow-soft">
         {stats.map(({ icon: Icon, value, label }, i) => (
           <Reveal key={label} delay={i * 80} direction="up" className="p-5 flex items-center gap-4 hover:bg-accent/20 transition-colors">
             <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 transition-transform hover:scale-110 hover:rotate-6">
