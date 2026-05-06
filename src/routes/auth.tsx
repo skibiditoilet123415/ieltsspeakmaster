@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import logoUrl from "@/assets/logo.png";
+import { AuthMascot } from "@/components/AuthMascot";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — IELTS Speaking AI" }] }),
@@ -64,7 +65,22 @@ function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md bg-card rounded-2xl shadow-elegant p-8">
+      <div className="w-full max-w-5xl grid md:grid-cols-2 gap-0 bg-card rounded-3xl shadow-elegant overflow-hidden">
+        {/* Left: animated mascot panel */}
+        <div className="relative hidden md:block bg-gradient-primary min-h-[560px]">
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, white 1px, transparent 1px), radial-gradient(circle at 70% 60%, white 1px, transparent 1px)", backgroundSize: "32px 32px, 48px 48px" }} />
+          <div className="relative z-10 p-8 text-primary-foreground">
+            <div className="text-sm uppercase tracking-widest opacity-80">Welcome</div>
+            <div className="text-2xl font-bold mt-1">Ready to speak?</div>
+            <p className="text-sm opacity-90 mt-2 max-w-xs">Sign in to start your IELTS Speaking journey with AI-powered practice.</p>
+          </div>
+          <div className="absolute inset-0 pt-32">
+            <AuthMascot />
+          </div>
+        </div>
+
+        {/* Right: form panel */}
+        <div className="p-8">
         <div className="flex items-center gap-3 mb-6">
           <img src={logoUrl} alt="IELTS Speaking Master logo" className="h-11 w-11 rounded-xl object-contain" />
           <div>
