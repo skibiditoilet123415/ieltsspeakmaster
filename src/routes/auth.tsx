@@ -24,6 +24,7 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pwFocused, setPwFocused] = useState(false);
 
   useEffect(() => {
     if (user) navigate({ to: "/" });
@@ -74,8 +75,8 @@ function AuthPage() {
             <div className="text-2xl font-bold mt-1">Ready to speak?</div>
             <p className="text-sm opacity-90 mt-2 max-w-xs">Sign in to start your IELTS Speaking journey with AI-powered practice.</p>
           </div>
-          <div className="absolute inset-0 pt-32">
-            <AuthMascot />
+          <div className="absolute inset-0 pt-24">
+            <AuthMascot passwordFocused={pwFocused} />
           </div>
         </div>
 
@@ -110,7 +111,7 @@ function AuthPage() {
           </div>
           <div>
             <Label>{t("auth.password")}</Label>
-            <Input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} onFocus={() => setPwFocused(true)} onBlur={() => setPwFocused(false)} />
           </div>
           <Button type="submit" disabled={busy} className="w-full bg-gradient-primary shadow-soft">
             {busy ? t("common.loading") : mode === "signin" ? t("auth.signin") : t("auth.signup")}
