@@ -68,6 +68,7 @@ function RootComponent() {
         <AuthProvider>
           <Outlet />
           <Toaster />
+          <CookieConsent />
         </AuthProvider>
       </I18nProvider>
     </ThemeProvider>
