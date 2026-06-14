@@ -13,11 +13,17 @@ import { Route as VocabularyRouteImport } from './routes/vocabulary'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as SpeakingRouteImport } from './routes/speaking'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as LegalRouteImport } from './routes/legal'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as FlashcardsRouteImport } from './routes/flashcards'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TopicTopicIdRouteImport } from './routes/topic.$topicId'
+import { Route as LegalTermsRouteImport } from './routes/legal.terms'
+import { Route as LegalRefundRouteImport } from './routes/legal.refund'
+import { Route as LegalPrivacyRouteImport } from './routes/legal.privacy'
+import { Route as LegalDisclaimerRouteImport } from './routes/legal.disclaimer'
+import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 
 const VocabularyRoute = VocabularyRouteImport.update({
   id: '/vocabulary',
@@ -37,6 +43,11 @@ const SpeakingRoute = SpeakingRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalRoute = LegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HistoryRoute = HistoryRouteImport.update({
@@ -64,16 +75,47 @@ const TopicTopicIdRoute = TopicTopicIdRouteImport.update({
   path: '/topic/$topicId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalTermsRoute = LegalTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => LegalRoute,
+} as any)
+const LegalRefundRoute = LegalRefundRouteImport.update({
+  id: '/refund',
+  path: '/refund',
+  getParentRoute: () => LegalRoute,
+} as any)
+const LegalPrivacyRoute = LegalPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => LegalRoute,
+} as any)
+const LegalDisclaimerRoute = LegalDisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => LegalRoute,
+} as any)
+const LegalCookiesRoute = LegalCookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => LegalRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/flashcards': typeof FlashcardsRoute
   '/history': typeof HistoryRoute
+  '/legal': typeof LegalRouteWithChildren
   '/settings': typeof SettingsRoute
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
   '/vocabulary': typeof VocabularyRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/disclaimer': typeof LegalDisclaimerRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/refund': typeof LegalRefundRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/topic/$topicId': typeof TopicTopicIdRoute
 }
 export interface FileRoutesByTo {
@@ -81,10 +123,16 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/flashcards': typeof FlashcardsRoute
   '/history': typeof HistoryRoute
+  '/legal': typeof LegalRouteWithChildren
   '/settings': typeof SettingsRoute
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
   '/vocabulary': typeof VocabularyRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/disclaimer': typeof LegalDisclaimerRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/refund': typeof LegalRefundRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/topic/$topicId': typeof TopicTopicIdRoute
 }
 export interface FileRoutesById {
@@ -93,10 +141,16 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/flashcards': typeof FlashcardsRoute
   '/history': typeof HistoryRoute
+  '/legal': typeof LegalRouteWithChildren
   '/settings': typeof SettingsRoute
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
   '/vocabulary': typeof VocabularyRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/disclaimer': typeof LegalDisclaimerRoute
+  '/legal/privacy': typeof LegalPrivacyRoute
+  '/legal/refund': typeof LegalRefundRoute
+  '/legal/terms': typeof LegalTermsRoute
   '/topic/$topicId': typeof TopicTopicIdRoute
 }
 export interface FileRouteTypes {
@@ -106,10 +160,16 @@ export interface FileRouteTypes {
     | '/auth'
     | '/flashcards'
     | '/history'
+    | '/legal'
     | '/settings'
     | '/speaking'
     | '/tips'
     | '/vocabulary'
+    | '/legal/cookies'
+    | '/legal/disclaimer'
+    | '/legal/privacy'
+    | '/legal/refund'
+    | '/legal/terms'
     | '/topic/$topicId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -117,10 +177,16 @@ export interface FileRouteTypes {
     | '/auth'
     | '/flashcards'
     | '/history'
+    | '/legal'
     | '/settings'
     | '/speaking'
     | '/tips'
     | '/vocabulary'
+    | '/legal/cookies'
+    | '/legal/disclaimer'
+    | '/legal/privacy'
+    | '/legal/refund'
+    | '/legal/terms'
     | '/topic/$topicId'
   id:
     | '__root__'
@@ -128,10 +194,16 @@ export interface FileRouteTypes {
     | '/auth'
     | '/flashcards'
     | '/history'
+    | '/legal'
     | '/settings'
     | '/speaking'
     | '/tips'
     | '/vocabulary'
+    | '/legal/cookies'
+    | '/legal/disclaimer'
+    | '/legal/privacy'
+    | '/legal/refund'
+    | '/legal/terms'
     | '/topic/$topicId'
   fileRoutesById: FileRoutesById
 }
@@ -140,6 +212,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   FlashcardsRoute: typeof FlashcardsRoute
   HistoryRoute: typeof HistoryRoute
+  LegalRoute: typeof LegalRouteWithChildren
   SettingsRoute: typeof SettingsRoute
   SpeakingRoute: typeof SpeakingRoute
   TipsRoute: typeof TipsRoute
@@ -177,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal': {
+      id: '/legal'
+      path: '/legal'
+      fullPath: '/legal'
+      preLoaderRoute: typeof LegalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -212,14 +292,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TopicTopicIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/terms': {
+      id: '/legal/terms'
+      path: '/terms'
+      fullPath: '/legal/terms'
+      preLoaderRoute: typeof LegalTermsRouteImport
+      parentRoute: typeof LegalRoute
+    }
+    '/legal/refund': {
+      id: '/legal/refund'
+      path: '/refund'
+      fullPath: '/legal/refund'
+      preLoaderRoute: typeof LegalRefundRouteImport
+      parentRoute: typeof LegalRoute
+    }
+    '/legal/privacy': {
+      id: '/legal/privacy'
+      path: '/privacy'
+      fullPath: '/legal/privacy'
+      preLoaderRoute: typeof LegalPrivacyRouteImport
+      parentRoute: typeof LegalRoute
+    }
+    '/legal/disclaimer': {
+      id: '/legal/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/legal/disclaimer'
+      preLoaderRoute: typeof LegalDisclaimerRouteImport
+      parentRoute: typeof LegalRoute
+    }
+    '/legal/cookies': {
+      id: '/legal/cookies'
+      path: '/cookies'
+      fullPath: '/legal/cookies'
+      preLoaderRoute: typeof LegalCookiesRouteImport
+      parentRoute: typeof LegalRoute
+    }
   }
 }
+
+interface LegalRouteChildren {
+  LegalCookiesRoute: typeof LegalCookiesRoute
+  LegalDisclaimerRoute: typeof LegalDisclaimerRoute
+  LegalPrivacyRoute: typeof LegalPrivacyRoute
+  LegalRefundRoute: typeof LegalRefundRoute
+  LegalTermsRoute: typeof LegalTermsRoute
+}
+
+const LegalRouteChildren: LegalRouteChildren = {
+  LegalCookiesRoute: LegalCookiesRoute,
+  LegalDisclaimerRoute: LegalDisclaimerRoute,
+  LegalPrivacyRoute: LegalPrivacyRoute,
+  LegalRefundRoute: LegalRefundRoute,
+  LegalTermsRoute: LegalTermsRoute,
+}
+
+const LegalRouteWithChildren = LegalRoute._addFileChildren(LegalRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   FlashcardsRoute: FlashcardsRoute,
   HistoryRoute: HistoryRoute,
+  LegalRoute: LegalRouteWithChildren,
   SettingsRoute: SettingsRoute,
   SpeakingRoute: SpeakingRoute,
   TipsRoute: TipsRoute,
@@ -229,12 +363,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
