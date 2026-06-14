@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 import { TopNav } from "./TopNav";
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -9,11 +10,16 @@ export function AppShell({ children }: { children: ReactNode }) {
         {children}
       </main>
       <footer className="border-t border-border py-6 mt-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-3 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <div>© {new Date().getFullYear()} IELTS Speaking AI Trainer</div>
-          <div className="flex items-center gap-4">
-            <span>Practice. Learn. Reach Band 7+</span>
-          </div>
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Link to="/legal/privacy" className="hover:text-foreground">Privacy</Link>
+            <Link to="/legal/terms" className="hover:text-foreground">Terms</Link>
+            <Link to="/legal/cookies" className="hover:text-foreground">Cookies</Link>
+            <Link to="/legal/refund" className="hover:text-foreground">Refund</Link>
+            <Link to="/legal/disclaimer" className="hover:text-foreground">Disclaimer</Link>
+            <a href="mailto:nguyenthienbaoflo@gmail.com" className="hover:text-foreground">Contact</a>
+          </nav>
         </div>
       </footer>
     </div>
