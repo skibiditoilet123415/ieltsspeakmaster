@@ -4,6 +4,7 @@ import { AuthProvider } from "@/lib/auth";
 import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieConsent } from "@/components/CookieConsent";
 
 function NotFoundComponent() {
   return (
@@ -67,6 +68,7 @@ function RootComponent() {
         <AuthProvider>
           <Outlet />
           <Toaster />
+          <CookieConsent />
         </AuthProvider>
       </I18nProvider>
     </ThemeProvider>
