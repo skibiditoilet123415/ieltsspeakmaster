@@ -342,6 +342,7 @@ function TrendShowcase() {
 }
 
 function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
+  const magRef = useMagnetic<HTMLButtonElement>(0.3);
   return (
     <section className="mt-16">
       <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-primary/40 bg-card p-8 sm:p-12">
@@ -362,8 +363,9 @@ function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
           </div>
           <div className="flex md:justify-end">
             <Button
+              ref={magRef}
               size="lg"
-              className="rounded-full h-14 px-8 bg-gradient-primary text-primary-foreground font-semibold shadow-elegant text-base"
+              className="rounded-full h-14 px-8 bg-gradient-primary text-primary-foreground font-semibold shadow-elegant text-base transition-transform duration-300 ease-out hover:shadow-glow"
               onClick={onStart}
             >
               Bắt đầu miễn phí <ArrowRight className="h-5 w-5" />
