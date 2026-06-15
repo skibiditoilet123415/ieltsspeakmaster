@@ -219,11 +219,13 @@ function Speaking() {
             }),
           ),
         ).slice(0, 10);
-        const amount = 5 + used.length * 10;
         try {
-          await supabase.rpc("award_xp", { amount });
+          if (session?.id) {
+            const { data: xp } = await supabase.rpc("award_session_xp", { _session_id: session.id });
+            const awarded = (xp as any)?.awarded ?? 0;
+            if (used.length || awarded) setXpAwarded({ amount: awarded, words: used });
+          }
         } catch {/* non-fatal */}
-        if (used.length) setXpAwarded({ amount, words: used });
       }
     } catch (e: any) {
       toast.error(e.message || t("common.error"));
