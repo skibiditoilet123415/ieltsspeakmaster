@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Star,
-  Quote,
+  
   Award,
   TrendingUp,
   Heart,
