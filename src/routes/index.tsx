@@ -62,7 +62,11 @@ function HomePage() {
 
 
 function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean; t: any }) {
+  const tiltRef = useTilt<HTMLDivElement>(10);
+  const blobRef = useParallax<HTMLDivElement>(0.15);
+  const tagRef = useParallax<HTMLDivElement>(-0.1);
   return (
+
     <section className="relative mt-2">
       <div className="grid lg:grid-cols-12 gap-8 items-center">
         {/* LEFT */}
