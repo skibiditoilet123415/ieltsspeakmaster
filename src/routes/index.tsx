@@ -357,14 +357,13 @@ function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
 
 function Testimonials() {
   const reviews = [
-    { name: "Phan Lệ Quỳnh Nhi", text: "Luyện thi với AI giúp em tự tin hơn rất nhiều. Câu hỏi sát đề thi thật, phản hồi nhanh và rất chi tiết.", band: "7.5" },
-    { name: "Lê Thị Hương", text: "Em chuẩn bị thi IELTS chỉ trong 2 tháng. Nhờ luyện speaking mỗi ngày trên app mà em đã đạt 7.5 overall!", band: "7.5" },
-    { name: "Trần Thảo Giang", text: "Em không biết bắt đầu từ đâu, app gợi ý lộ trình rõ ràng. Em đặc biệt thích phần từ vựng theo chủ đề.", band: "7.0" },
-    { name: "Võ Thị Mỹ Hương", text: "Đã từng học ở nhiều trung tâm nhưng app này cho em sự linh hoạt và phản hồi cá nhân hoá tốt nhất.", band: "8.0" },
-    { name: "Đặng Quốc Bảo", text: "Phần chấm điểm rất công bằng. Em thấy được điểm yếu trong grammar và đã cải thiện rõ rệt sau 3 tuần.", band: "7.5" },
-    { name: "Hoàng Khánh Linh", text: "Giao diện đẹp, dễ dùng, luyện mọi lúc mọi nơi. Em đã từ band 6.0 lên 7.5 chỉ sau 6 tuần.", band: "7.5" },
+    { label: "Học viên IELTS · 2026", text: "Luyện thi với AI giúp em tự tin hơn rất nhiều. Câu hỏi sát đề thi thật, phản hồi nhanh và rất chi tiết.", band: "7.5" },
+    { label: "Ứng viên band 7.5", text: "Em chuẩn bị thi IELTS chỉ trong 2 tháng. Nhờ luyện speaking mỗi ngày trên app mà em đã đạt 7.5 overall!", band: "7.5" },
+    { label: "Người học mới bắt đầu", text: "Em không biết bắt đầu từ đâu, app gợi ý lộ trình rõ ràng. Em đặc biệt thích phần từ vựng theo chủ đề.", band: "7.0" },
+    { label: "Học viên chuyển từ trung tâm", text: "Đã từng học ở nhiều trung tâm nhưng app này cho em sự linh hoạt và phản hồi cá nhân hoá tốt nhất.", band: "8.0" },
+    { label: "Học viên luyện 3 tuần", text: "Phần chấm điểm rất công bằng. Em thấy được điểm yếu trong grammar và đã cải thiện rõ rệt sau 3 tuần.", band: "7.5" },
+    { label: "Học viên từ band 6.0", text: "Giao diện đẹp, dễ dùng, luyện mọi lúc mọi nơi. Em đã từ band 6.0 lên 7.5 chỉ sau 6 tuần.", band: "7.5" },
   ];
-  const initials = (n: string) => n.split(" ").slice(-2).map((w) => w[0]).join("");
   const accents = ["border-l-primary", "border-l-pink-500", "border-l-emerald-500", "border-l-amber-500", "border-l-violet-500", "border-l-sky-500"];
 
   return (
@@ -403,16 +402,16 @@ function Testimonials() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {reviews.map((r, i) => (
           <Card
-            key={r.name}
+            key={r.label + i}
             className={`p-5 border-l-4 ${accents[i % accents.length]} shadow-soft hover:shadow-elegant transition-all hover:-translate-y-0.5`}
           >
             <div className="flex items-start gap-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-primary text-primary-foreground flex items-center justify-center font-bold text-sm shrink-0">
-                {initials(r.name)}
+              <div className="h-10 w-10 rounded-full bg-gradient-primary text-primary-foreground flex items-center justify-center shrink-0">
+                <GraduationCap className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="font-semibold text-sm truncate">{r.name}</div>
+                  <div className="font-semibold text-sm truncate">{r.label}</div>
                   <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded shrink-0">
                     {r.band}
                   </span>
@@ -433,3 +432,4 @@ function Testimonials() {
     </section>
   );
 }
+
