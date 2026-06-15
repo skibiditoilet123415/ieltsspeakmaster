@@ -153,6 +153,7 @@ export type Database = {
           topic_title: string | null
           user_id: string
           vocabulary_band: number | null
+          xp_awarded: boolean
         }
         Insert: {
           completed_at?: string | null
@@ -168,6 +169,7 @@ export type Database = {
           topic_title?: string | null
           user_id: string
           vocabulary_band?: number | null
+          xp_awarded?: boolean
         }
         Update: {
           completed_at?: string | null
@@ -183,6 +185,7 @@ export type Database = {
           topic_title?: string | null
           user_id?: string
           vocabulary_band?: number | null
+          xp_awarded?: boolean
         }
         Relationships: [
           {
@@ -338,7 +341,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      award_xp: { Args: { amount: number }; Returns: Json }
+      award_session_xp: { Args: { _session_id: string }; Returns: Json }
       consume_daily_test: { Args: never; Returns: Json }
       is_free_topic: { Args: { _topic_id: string }; Returns: boolean }
       seed_topic_lessons: {

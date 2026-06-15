@@ -126,11 +126,15 @@ function Speaking() {
     setThinking(true);
 
     try {
+      const { data: sess } = await supabase.auth.getSession();
+      const token = sess.session?.access_token;
+      if (!token) throw new Error(t("common.error"));
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/examiner`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify({ topic, messages: next }),
       });
@@ -151,11 +155,15 @@ function Speaking() {
     setScoring(true);
     stopSpeaking();
     try {
+      const { data: sess } = await supabase.auth.getSession();
+      const token = sess.session?.access_token;
+      if (!token) throw new Error(t("common.error"));
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/score`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          Authorization: `Bearer ${token}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify({ topic, messages }),
       });
@@ -219,11 +227,13 @@ function Speaking() {
             }),
           ),
         ).slice(0, 10);
-        const amount = 5 + used.length * 10;
         try {
-          await supabase.rpc("award_xp", { amount });
+          if (session?.id) {
+            const { data: xp } = await supabase.rpc("award_session_xp", { _session_id: session.id });
+            const awarded = (xp as any)?.awarded ?? 0;
+            if (used.length || awarded) setXpAwarded({ amount: awarded, words: used });
+          }
         } catch {/* non-fatal */}
-        if (used.length) setXpAwarded({ amount, words: used });
       }
     } catch (e: any) {
       toast.error(e.message || t("common.error"));
