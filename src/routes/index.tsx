@@ -4,7 +4,8 @@ import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Reveal, CountUp } from "@/components/Reveal";
+import { Reveal, CountUp, useTilt } from "@/components/Reveal";
+import { ScrollProgress, useMagnetic, useParallax } from "@/components/ScrollProgress";
 import {
   Mic,
   Sparkles,
@@ -15,8 +16,6 @@ import {
   ArrowRight,
   Star,
   Quote,
-  Users,
-  Trophy,
   Award,
   TrendingUp,
   Heart,
@@ -24,9 +23,10 @@ import {
   Waves,
   Zap,
   PlayCircle,
+  Users,
   GraduationCap,
-  Globe2,
 } from "lucide-react";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
