@@ -118,9 +118,27 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
         </div>
 
         {/* RIGHT: floating chat-mock card */}
-        <div className="lg:col-span-5 relative">
-          <div className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full animate-blob" aria-hidden />
-          <div className="relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover-lift animate-float-slow">
+        <div className="lg:col-span-5 relative [perspective:1200px]">
+          <div ref={blobRef} className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full animate-blob" aria-hidden />
+          {/* Drifting particles */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+            {[0,1,2,3,4,5].map((i) => (
+              <span
+                key={i}
+                className="absolute h-1.5 w-1.5 rounded-full bg-primary/40 animate-drift"
+                style={{
+                  left: `${10 + i * 14}%`,
+                  bottom: `${5 + (i % 3) * 15}%`,
+                  ['--dx' as any]: `${(i % 2 ? -1 : 1) * (20 + i * 6)}px`,
+                  ['--dy' as any]: `${-(60 + i * 12)}px`,
+                  ['--dur' as any]: `${6 + (i % 4)}s`,
+                  animationDelay: `${i * 0.7}s`,
+                }}
+              />
+            ))}
+          </div>
+          <div ref={tiltRef} className="tilt-card relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover-lift animate-float-slow">
+
             <div className="flex items-center justify-between text-xs">
               <div className="inline-flex items-center gap-2 font-semibold">
                 <span className="h-8 w-8 rounded-full bg-gradient-primary flex items-center justify-center">
