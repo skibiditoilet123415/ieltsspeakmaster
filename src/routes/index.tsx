@@ -4,7 +4,8 @@ import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Reveal, CountUp } from "@/components/Reveal";
+import { Reveal, CountUp, useTilt } from "@/components/Reveal";
+import { ScrollProgress, useMagnetic, useParallax } from "@/components/ScrollProgress";
 import {
   Mic,
   Sparkles,
@@ -14,9 +15,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Star,
-  Quote,
-  Users,
-  Trophy,
+  
   Award,
   TrendingUp,
   Heart,
@@ -24,9 +23,10 @@ import {
   Waves,
   Zap,
   PlayCircle,
+  Users,
   GraduationCap,
-  Globe2,
 } from "lucide-react";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -49,20 +49,24 @@ function HomePage() {
 
   return (
     <AppShell>
+      <ScrollProgress />
       <Hero onStart={() => navigate({ to: user ? "/speaking" : "/auth" })} signedIn={!!user} t={t} />
       <Reveal><StatsBand /></Reveal>
       <Reveal direction="up"><Features t={t} /></Reveal>
       <Reveal direction="zoom"><TrendShowcase /></Reveal>
-      <Reveal direction="left"><TopStudent /></Reveal>
-      <Reveal direction="right"><StudentsWall /></Reveal>
       <Reveal><Testimonials /></Reveal>
       {!user && <Reveal direction="zoom"><CallToAction onStart={() => navigate({ to: "/auth" })} t={t} /></Reveal>}
     </AppShell>
   );
 }
 
+
 function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean; t: any }) {
+  const tiltRef = useTilt<HTMLDivElement>(10);
+  const blobRef = useParallax<HTMLDivElement>(0.15);
+  const tagRef = useParallax<HTMLDivElement>(-0.1);
   return (
+
     <section className="relative mt-2">
       <div className="grid lg:grid-cols-12 gap-8 items-center">
         {/* LEFT */}
@@ -114,9 +118,27 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
         </div>
 
         {/* RIGHT: floating chat-mock card */}
-        <div className="lg:col-span-5 relative">
-          <div className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full animate-blob" aria-hidden />
-          <div className="relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover-lift animate-float-slow">
+        <div className="lg:col-span-5 relative [perspective:1200px]">
+          <div ref={blobRef} className="absolute -inset-6 bg-gradient-hero opacity-20 blur-3xl rounded-full animate-blob" aria-hidden />
+          {/* Drifting particles */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+            {[0,1,2,3,4,5].map((i) => (
+              <span
+                key={i}
+                className="absolute h-1.5 w-1.5 rounded-full bg-primary/40 animate-drift"
+                style={{
+                  left: `${10 + i * 14}%`,
+                  bottom: `${5 + (i % 3) * 15}%`,
+                  ['--dx' as any]: `${(i % 2 ? -1 : 1) * (20 + i * 6)}px`,
+                  ['--dy' as any]: `${-(60 + i * 12)}px`,
+                  ['--dur' as any]: `${6 + (i % 4)}s`,
+                  animationDelay: `${i * 0.7}s`,
+                }}
+              />
+            ))}
+          </div>
+          <div ref={tiltRef} className="tilt-card relative rounded-3xl bg-card border shadow-elegant p-5 rotate-1 hover-lift animate-float-slow">
+
             <div className="flex items-center justify-between text-xs">
               <div className="inline-flex items-center gap-2 font-semibold">
                 <span className="h-8 w-8 rounded-full bg-gradient-primary flex items-center justify-center">
@@ -161,7 +183,7 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
             </div>
           </div>
 
-          <div className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 animate-float-tag">
+          <div ref={tagRef} className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 animate-float-tag">
             <div className="h-10 w-10 rounded-full bg-success/15 flex items-center justify-center">
               <Zap className="h-5 w-5 text-success" />
             </div>
@@ -320,6 +342,7 @@ function TrendShowcase() {
 }
 
 function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
+  const magRef = useMagnetic<HTMLButtonElement>(0.3);
   return (
     <section className="mt-16">
       <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-primary/40 bg-card p-8 sm:p-12">
@@ -340,8 +363,9 @@ function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
           </div>
           <div className="flex md:justify-end">
             <Button
+              ref={magRef}
               size="lg"
-              className="rounded-full h-14 px-8 bg-gradient-primary text-primary-foreground font-semibold shadow-elegant text-base"
+              className="rounded-full h-14 px-8 bg-gradient-primary text-primary-foreground font-semibold shadow-elegant text-base transition-transform duration-300 ease-out hover:shadow-glow"
               onClick={onStart}
             >
               Bắt đầu miễn phí <ArrowRight className="h-5 w-5" />
@@ -354,168 +378,16 @@ function CallToAction({ onStart, t }: { onStart: () => void; t: any }) {
 }
 
 
-function TopStudent() {
-  return (
-    <section className="mt-16">
-      <div className="flex items-end justify-between mb-6 gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            <Trophy className="h-4 w-4" /> Hall of Fame
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold mt-2">Vinh danh học viên xuất sắc</h2>
-          <p className="text-sm text-muted-foreground mt-1">Học viên đạt band cao nhất tháng này</p>
-        </div>
-        <div className="hidden sm:block text-right text-xs text-muted-foreground">
-          <div className="font-mono">No. 01</div>
-          <div className="font-mono">/ 2026</div>
-        </div>
-      </div>
-
-      <Card className="overflow-hidden border-0 shadow-elegant">
-        <div className="grid md:grid-cols-5">
-          {/* Left: portrait block */}
-          <div className="md:col-span-2 relative bg-gradient-hero p-8 flex flex-col justify-between min-h-[280px]">
-            <div className="absolute top-4 right-4 text-primary-foreground/40 text-[10px] font-mono tracking-widest">
-              IELTS · 2026
-            </div>
-            <div className="relative">
-              <div className="h-32 w-32 rounded-full bg-white/15 backdrop-blur-md border-4 border-white/30 flex items-center justify-center text-5xl font-black text-white shadow-glow">
-                NG
-              </div>
-              <div className="absolute -bottom-2 -right-2 h-12 w-12 rounded-full bg-yellow-400 flex items-center justify-center shadow-lg">
-                <Trophy className="h-6 w-6 text-yellow-900" />
-              </div>
-            </div>
-            <div className="text-primary-foreground">
-              <div className="text-[10px] uppercase tracking-[0.3em] opacity-70">Top Student</div>
-              <div className="text-2xl font-extrabold leading-tight mt-1">Nguyễn Trần<br/>Ngân Giang</div>
-            </div>
-          </div>
-
-          {/* Right: quote + scores */}
-          <div className="md:col-span-3 p-8 bg-card flex flex-col justify-between">
-            <div>
-              <Quote className="h-8 w-8 text-primary/20" />
-              <p className="text-base sm:text-lg leading-relaxed mt-2 font-medium">
-                Em thấy rất hài lòng với phương pháp luyện nói của IELTS Speaking Master.
-                AI chấm điểm rất chi tiết, giúp em biết mình yếu ở đâu để cải thiện.
-                <span className="text-primary"> Em đã đạt được band điểm mơ ước!</span>
-              </p>
-            </div>
-
-            <div className="mt-6 pt-6 border-t border-dashed">
-              <div className="flex items-end justify-between gap-4">
-                <div>
-                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Overall Band</div>
-                  <div className="text-5xl font-black bg-gradient-primary bg-clip-text text-transparent">8.0</div>
-                </div>
-                <div className="grid grid-cols-4 gap-3 text-center">
-                  {[
-                    { l: "Fluency", v: "8.5" },
-                    { l: "Lexical", v: "8.0" },
-                    { l: "Grammar", v: "7.5" },
-                    { l: "Pron.", v: "8.0" },
-                  ].map((s) => (
-                    <div key={s.l} className="px-2">
-                      <div className="text-lg font-bold">{s.v}</div>
-                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">{s.l}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Card>
-    </section>
-  );
-}
-
-function StudentsWall() {
-  const students = [
-    { name: "Phạm Tường Nguyên", band: 8.5 },
-    { name: "Đỗ Thuỳ Linh", band: 8.0 },
-    { name: "Trần Quang Minh", band: 7.5 },
-    { name: "Lê Bảo Ngọc", band: 8.0 },
-    { name: "Nguyễn Thanh Đạt", band: 7.5 },
-    { name: "Phan Hồng Nhung", band: 8.0 },
-    { name: "Vũ Hà Anh", band: 7.5 },
-    { name: "Hoàng Mai Phương", band: 8.5 },
-    { name: "Bùi Khánh Vy", band: 7.5 },
-    { name: "Đinh Hải Yến", band: 8.0 },
-    { name: "Ngô Minh Thư", band: 7.5 },
-    { name: "Trịnh Khả Hân", band: 8.0 },
-  ];
-  const initials = (n: string) => n.split(" ").slice(-2).map((w) => w[0]).join("");
-
-  return (
-    <section className="mt-16">
-      <div className="grid lg:grid-cols-3 gap-6 items-center">
-        {/* Left: stat hero */}
-        <div className="lg:col-span-1 text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            <TrendingUp className="h-4 w-4" /> Cộng đồng
-          </div>
-          <div className="mt-3 flex items-baseline gap-2 justify-center lg:justify-start">
-            <span className="text-5xl sm:text-6xl font-black bg-gradient-primary bg-clip-text text-transparent">100K+</span>
-          </div>
-          <h3 className="text-lg font-bold mt-2">học viên đã tin tưởng</h3>
-          <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
-            Đã đạt band điểm mơ ước cùng IELTS Speaking Master qua các khoá luyện nói cá nhân hoá.
-          </p>
-          <div className="mt-4 flex items-center gap-3 justify-center lg:justify-start">
-            <div className="flex -space-x-2">
-              {["bg-rose-400","bg-amber-400","bg-emerald-400","bg-sky-400"].map((c,i)=>(
-                <div key={i} className={`h-7 w-7 rounded-full ${c} border-2 border-background`} />
-              ))}
-            </div>
-            <span className="text-xs text-muted-foreground">+ nhiều học viên khác</span>
-          </div>
-        </div>
-
-        {/* Right: avatar collage */}
-        <div className="lg:col-span-2 grid grid-cols-4 sm:grid-cols-6 gap-2">
-          {students.map((s, i) => {
-            // alternating rounded shapes for variety
-            const shape = i % 3 === 0 ? "rounded-full" : i % 3 === 1 ? "rounded-2xl" : "rounded-[28%]";
-            const tones = [
-              "bg-primary text-primary-foreground",
-              "bg-accent text-accent-foreground",
-              "bg-secondary text-secondary-foreground",
-              "bg-gradient-primary text-primary-foreground",
-            ];
-            const tone = tones[i % tones.length];
-            const offset = i % 2 === 0 ? "" : "translate-y-3";
-            return (
-              <div key={s.name} className={`group relative ${offset}`}>
-                <div className={`aspect-square ${shape} ${tone} flex items-center justify-center font-bold text-base shadow-soft hover:shadow-elegant hover:scale-105 transition-all`}>
-                  {initials(s.name)}
-                </div>
-                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.5 rounded-md bg-background border text-[9px] font-bold text-primary shadow-soft whitespace-nowrap">
-                  {s.band.toFixed(1)}
-                </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-foreground text-background text-[10px] whitespace-nowrap z-10">
-                  {s.name}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function Testimonials() {
   const reviews = [
-    { name: "Phan Lệ Quỳnh Nhi", text: "Luyện thi với AI giúp em tự tin hơn rất nhiều. Câu hỏi sát đề thi thật, phản hồi nhanh và rất chi tiết.", band: "7.5" },
-    { name: "Lê Thị Hương", text: "Em chuẩn bị thi IELTS chỉ trong 2 tháng. Nhờ luyện speaking mỗi ngày trên app mà em đã đạt 7.5 overall!", band: "7.5" },
-    { name: "Trần Thảo Giang", text: "Em không biết bắt đầu từ đâu, app gợi ý lộ trình rõ ràng. Em đặc biệt thích phần từ vựng theo chủ đề.", band: "7.0" },
-    { name: "Võ Thị Mỹ Hương", text: "Đã từng học ở nhiều trung tâm nhưng app này cho em sự linh hoạt và phản hồi cá nhân hoá tốt nhất.", band: "8.0" },
-    { name: "Đặng Quốc Bảo", text: "Phần chấm điểm rất công bằng. Em thấy được điểm yếu trong grammar và đã cải thiện rõ rệt sau 3 tuần.", band: "7.5" },
-    { name: "Hoàng Khánh Linh", text: "Giao diện đẹp, dễ dùng, luyện mọi lúc mọi nơi. Em đã từ band 6.0 lên 7.5 chỉ sau 6 tuần.", band: "7.5" },
+    { label: "Học viên IELTS · 2026", text: "Luyện thi với AI giúp em tự tin hơn rất nhiều. Câu hỏi sát đề thi thật, phản hồi nhanh và rất chi tiết.", band: "7.5" },
+    { label: "Ứng viên band 7.5", text: "Em chuẩn bị thi IELTS chỉ trong 2 tháng. Nhờ luyện speaking mỗi ngày trên app mà em đã đạt 7.5 overall!", band: "7.5" },
+    { label: "Người học mới bắt đầu", text: "Em không biết bắt đầu từ đâu, app gợi ý lộ trình rõ ràng. Em đặc biệt thích phần từ vựng theo chủ đề.", band: "7.0" },
+    { label: "Học viên chuyển từ trung tâm", text: "Đã từng học ở nhiều trung tâm nhưng app này cho em sự linh hoạt và phản hồi cá nhân hoá tốt nhất.", band: "8.0" },
+    { label: "Học viên luyện 3 tuần", text: "Phần chấm điểm rất công bằng. Em thấy được điểm yếu trong grammar và đã cải thiện rõ rệt sau 3 tuần.", band: "7.5" },
+    { label: "Học viên từ band 6.0", text: "Giao diện đẹp, dễ dùng, luyện mọi lúc mọi nơi. Em đã từ band 6.0 lên 7.5 chỉ sau 6 tuần.", band: "7.5" },
   ];
-  const initials = (n: string) => n.split(" ").slice(-2).map((w) => w[0]).join("");
   const accents = ["border-l-primary", "border-l-pink-500", "border-l-emerald-500", "border-l-amber-500", "border-l-violet-500", "border-l-sky-500"];
 
   return (
@@ -554,16 +426,16 @@ function Testimonials() {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {reviews.map((r, i) => (
           <Card
-            key={r.name}
+            key={r.label + i}
             className={`p-5 border-l-4 ${accents[i % accents.length]} shadow-soft hover:shadow-elegant transition-all hover:-translate-y-0.5`}
           >
             <div className="flex items-start gap-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-primary text-primary-foreground flex items-center justify-center font-bold text-sm shrink-0">
-                {initials(r.name)}
+              <div className="h-10 w-10 rounded-full bg-gradient-primary text-primary-foreground flex items-center justify-center shrink-0">
+                <GraduationCap className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <div className="font-semibold text-sm truncate">{r.name}</div>
+                  <div className="font-semibold text-sm truncate">{r.label}</div>
                   <span className="text-[10px] font-bold bg-primary/10 text-primary px-1.5 py-0.5 rounded shrink-0">
                     {r.band}
                   </span>
@@ -584,3 +456,4 @@ function Testimonials() {
     </section>
   );
 }
+
