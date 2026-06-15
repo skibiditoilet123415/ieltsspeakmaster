@@ -183,7 +183,7 @@ function Hero({ onStart, signedIn, t }: { onStart: () => void; signedIn: boolean
             </div>
           </div>
 
-          <div className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 animate-float-tag">
+          <div ref={tagRef} className="absolute -bottom-4 -left-4 rounded-2xl bg-card border shadow-elegant px-4 py-3 flex items-center gap-3 animate-float-tag">
             <div className="h-10 w-10 rounded-full bg-success/15 flex items-center justify-center">
               <Zap className="h-5 w-5 text-success" />
             </div>
