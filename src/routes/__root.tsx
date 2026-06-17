@@ -70,6 +70,7 @@ function RootComponent() {
           <Outlet />
           <Toaster />
           <CookieConsent />
+          <HighlightToolbar />
         </AuthProvider>
       </I18nProvider>
     </ThemeProvider>
