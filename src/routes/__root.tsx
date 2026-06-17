@@ -5,6 +5,7 @@ import { I18nProvider } from "@/lib/i18n";
 import { ThemeProvider } from "@/lib/theme";
 import { Toaster } from "@/components/ui/sonner";
 import { CookieConsent } from "@/components/CookieConsent";
+import { HighlightToolbar } from "@/components/HighlightToolbar";
 
 function NotFoundComponent() {
   return (
@@ -69,6 +70,7 @@ function RootComponent() {
           <Outlet />
           <Toaster />
           <CookieConsent />
+          <HighlightToolbar />
         </AuthProvider>
       </I18nProvider>
     </ThemeProvider>

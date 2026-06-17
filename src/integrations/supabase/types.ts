@@ -271,6 +271,7 @@ export type Database = {
       vocabulary: {
         Row: {
           box: number
+          cefr_level: string | null
           created_at: string
           difficulty: number | null
           example: string | null
@@ -278,6 +279,7 @@ export type Database = {
           meaning_en: string | null
           meaning_vi: string | null
           next_review: string
+          pronunciation: string | null
           session_id: string | null
           source: string | null
           synonyms: string[] | null
@@ -290,6 +292,7 @@ export type Database = {
         }
         Insert: {
           box?: number
+          cefr_level?: string | null
           created_at?: string
           difficulty?: number | null
           example?: string | null
@@ -297,6 +300,7 @@ export type Database = {
           meaning_en?: string | null
           meaning_vi?: string | null
           next_review?: string
+          pronunciation?: string | null
           session_id?: string | null
           source?: string | null
           synonyms?: string[] | null
@@ -309,6 +313,7 @@ export type Database = {
         }
         Update: {
           box?: number
+          cefr_level?: string | null
           created_at?: string
           difficulty?: number | null
           example?: string | null
@@ -316,6 +321,7 @@ export type Database = {
           meaning_en?: string | null
           meaning_vi?: string | null
           next_review?: string
+          pronunciation?: string | null
           session_id?: string | null
           source?: string | null
           synonyms?: string[] | null
