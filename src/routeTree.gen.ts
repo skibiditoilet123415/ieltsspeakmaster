@@ -13,6 +13,7 @@ import { Route as VocabularyRouteImport } from './routes/vocabulary'
 import { Route as TipsRouteImport } from './routes/tips'
 import { Route as SpeakingRouteImport } from './routes/speaking'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as FlashcardsRouteImport } from './routes/flashcards'
@@ -43,6 +44,11 @@ const SpeakingRoute = SpeakingRouteImport.update({
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LegalRoute = LegalRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/flashcards': typeof FlashcardsRoute
   '/history': typeof HistoryRoute
   '/legal': typeof LegalRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/flashcards': typeof FlashcardsRoute
   '/history': typeof HistoryRoute
   '/legal': typeof LegalRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/flashcards': typeof FlashcardsRoute
   '/history': typeof HistoryRoute
   '/legal': typeof LegalRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/settings': typeof SettingsRoute
   '/speaking': typeof SpeakingRoute
   '/tips': typeof TipsRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/flashcards'
     | '/history'
     | '/legal'
+    | '/reset-password'
     | '/settings'
     | '/speaking'
     | '/tips'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/flashcards'
     | '/history'
     | '/legal'
+    | '/reset-password'
     | '/settings'
     | '/speaking'
     | '/tips'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/flashcards'
     | '/history'
     | '/legal'
+    | '/reset-password'
     | '/settings'
     | '/speaking'
     | '/tips'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   FlashcardsRoute: typeof FlashcardsRoute
   HistoryRoute: typeof HistoryRoute
   LegalRoute: typeof LegalRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SettingsRoute: typeof SettingsRoute
   SpeakingRoute: typeof SpeakingRoute
   TipsRoute: typeof TipsRoute
@@ -248,6 +261,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/legal': {
@@ -354,6 +374,7 @@ const rootRouteChildren: RootRouteChildren = {
   FlashcardsRoute: FlashcardsRoute,
   HistoryRoute: HistoryRoute,
   LegalRoute: LegalRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
   SettingsRoute: SettingsRoute,
   SpeakingRoute: SpeakingRoute,
   TipsRoute: TipsRoute,
