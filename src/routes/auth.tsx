@@ -322,7 +322,7 @@ function AuthPage() {
 
             <Button
               type="submit"
-              disabled={busy}
+              disabled={busy || (isForgot && cooldown > 0 && ((channel === "email" && emailSent) || (channel === "phone" && !otpSent)))}
               className="w-full h-11 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium"
             >
               {busy
@@ -334,7 +334,11 @@ function AuthPage() {
                 : otpSent
                 ? "Update password"
                 : channel === "email"
-                ? "Send reset email"
+                ? emailSent && cooldown > 0
+                  ? `Resend email (${cooldown}s)`
+                  : "Send reset email"
+                : cooldown > 0
+                ? `Resend code (${cooldown}s)`
                 : "Send code"}
             </Button>
 
