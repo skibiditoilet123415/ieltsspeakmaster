@@ -38,15 +38,25 @@ function AuthPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [newPw, setNewPw] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
     if (user) navigate({ to: "/" });
   }, [user, navigate]);
 
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setInterval(() => setCooldown((c) => c - 1), 1000);
+    return () => clearInterval(id);
+  }, [cooldown]);
+
   const resetForgot = () => {
     setOtpSent(false);
     setOtp("");
     setNewPw("");
+    setEmailSent(false);
+    setCooldown(0);
   };
 
   const submit = async (e: React.FormEvent) => {
