@@ -61,6 +61,7 @@ function AuthPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (cooldown > 0 && isForgot && ((channel === "email" && emailSent) || (channel === "phone" && otpSent))) return;
     setBusy(true);
     try {
       if (mode === "signup") {
@@ -93,33 +94,36 @@ function AuthPage() {
         );
         if (error) throw error;
       } else if (mode === "forgot") {
-        if (!otpSent) {
-          if (channel === "email") {
-            if (!email) throw new Error("Enter your email");
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-              redirectTo: window.location.origin + "/reset-password",
-            });
-            if (error) throw error;
-            toast.success("Reset link sent! Check your email.");
-          } else {
+        if (channel === "email") {
+          if (!email) throw new Error("Enter your email");
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + "/reset-password",
+          });
+          if (error) throw error;
+          toast.success("Reset link sent! Check your email.");
+          setEmailSent(true);
+          setCooldown(60);
+        } else {
+          if (!otpSent) {
             if (!phone) throw new Error("Enter your phone number");
             const { error } = await supabase.auth.signInWithOtp({ phone });
             if (error) throw error;
             setOtpSent(true);
             toast.success("Verification code sent to your phone");
+            setCooldown(60);
+          } else {
+            // phone OTP verify + update password
+            const { error: vErr } = await supabase.auth.verifyOtp({
+              phone,
+              token: otp,
+              type: "sms",
+            });
+            if (vErr) throw vErr;
+            const { error: uErr } = await supabase.auth.updateUser({ password: newPw });
+            if (uErr) throw uErr;
+            toast.success("Password updated! You're signed in.");
+            navigate({ to: "/" });
           }
-        } else {
-          // phone OTP verify + update password
-          const { error: vErr } = await supabase.auth.verifyOtp({
-            phone,
-            token: otp,
-            type: "sms",
-          });
-          if (vErr) throw vErr;
-          const { error: uErr } = await supabase.auth.updateUser({ password: newPw });
-          if (uErr) throw uErr;
-          toast.success("Password updated! You're signed in.");
-          navigate({ to: "/" });
         }
       }
     } catch (err: any) {
