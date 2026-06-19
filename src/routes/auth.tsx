@@ -296,6 +296,27 @@ function AuthPage() {
                     className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
                   />
                 </div>
+                <div className="text-right">
+                  <button
+                    type="button"
+                    disabled={cooldown > 0 || busy}
+                    onClick={() => {
+                      if (cooldown > 0 || !phone) return;
+                      setBusy(true);
+                      supabase.auth.signInWithOtp({ phone })
+                        .then(({ error }) => {
+                          if (error) throw error;
+                          toast.success("Verification code resent to your phone");
+                          setCooldown(60);
+                        })
+                        .catch((err: any) => toast.error(err.message || "Failed to resend"))
+                        .finally(() => setBusy(false));
+                    }}
+                    className="text-xs text-neutral-600 hover:text-neutral-900 disabled:text-neutral-400 disabled:cursor-not-allowed font-medium"
+                  >
+                    {cooldown > 0 ? `Resend code (${cooldown}s)` : "Resend code"}
+                  </button>
+                </div>
               </>
             )}
 
