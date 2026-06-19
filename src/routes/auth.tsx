@@ -38,19 +38,30 @@ function AuthPage() {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [newPw, setNewPw] = useState("");
+  const [cooldown, setCooldown] = useState(0);
+  const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
     if (user) navigate({ to: "/" });
   }, [user, navigate]);
 
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const id = setInterval(() => setCooldown((c) => c - 1), 1000);
+    return () => clearInterval(id);
+  }, [cooldown]);
+
   const resetForgot = () => {
     setOtpSent(false);
     setOtp("");
     setNewPw("");
+    setEmailSent(false);
+    setCooldown(0);
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (cooldown > 0 && isForgot && ((channel === "email" && emailSent) || (channel === "phone" && otpSent))) return;
     setBusy(true);
     try {
       if (mode === "signup") {
@@ -83,33 +94,36 @@ function AuthPage() {
         );
         if (error) throw error;
       } else if (mode === "forgot") {
-        if (!otpSent) {
-          if (channel === "email") {
-            if (!email) throw new Error("Enter your email");
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-              redirectTo: window.location.origin + "/reset-password",
-            });
-            if (error) throw error;
-            toast.success("Reset link sent! Check your email.");
-          } else {
+        if (channel === "email") {
+          if (!email) throw new Error("Enter your email");
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + "/reset-password",
+          });
+          if (error) throw error;
+          toast.success("Reset link sent! Check your email.");
+          setEmailSent(true);
+          setCooldown(60);
+        } else {
+          if (!otpSent) {
             if (!phone) throw new Error("Enter your phone number");
             const { error } = await supabase.auth.signInWithOtp({ phone });
             if (error) throw error;
             setOtpSent(true);
             toast.success("Verification code sent to your phone");
+            setCooldown(60);
+          } else {
+            // phone OTP verify + update password
+            const { error: vErr } = await supabase.auth.verifyOtp({
+              phone,
+              token: otp,
+              type: "sms",
+            });
+            if (vErr) throw vErr;
+            const { error: uErr } = await supabase.auth.updateUser({ password: newPw });
+            if (uErr) throw uErr;
+            toast.success("Password updated! You're signed in.");
+            navigate({ to: "/" });
           }
-        } else {
-          // phone OTP verify + update password
-          const { error: vErr } = await supabase.auth.verifyOtp({
-            phone,
-            token: otp,
-            type: "sms",
-          });
-          if (vErr) throw vErr;
-          const { error: uErr } = await supabase.auth.updateUser({ password: newPw });
-          if (uErr) throw uErr;
-          toast.success("Password updated! You're signed in.");
-          navigate({ to: "/" });
         }
       }
     } catch (err: any) {
@@ -282,6 +296,27 @@ function AuthPage() {
                     className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
                   />
                 </div>
+                <div className="text-right">
+                  <button
+                    type="button"
+                    disabled={cooldown > 0 || busy}
+                    onClick={() => {
+                      if (cooldown > 0 || !phone) return;
+                      setBusy(true);
+                      supabase.auth.signInWithOtp({ phone })
+                        .then(({ error }) => {
+                          if (error) throw error;
+                          toast.success("Verification code resent to your phone");
+                          setCooldown(60);
+                        })
+                        .catch((err: any) => toast.error(err.message || "Failed to resend"))
+                        .finally(() => setBusy(false));
+                    }}
+                    className="text-xs text-neutral-600 hover:text-neutral-900 disabled:text-neutral-400 disabled:cursor-not-allowed font-medium"
+                  >
+                    {cooldown > 0 ? `Resend code (${cooldown}s)` : "Resend code"}
+                  </button>
+                </div>
               </>
             )}
 
@@ -308,7 +343,7 @@ function AuthPage() {
 
             <Button
               type="submit"
-              disabled={busy}
+              disabled={busy || (isForgot && cooldown > 0 && ((channel === "email" && emailSent) || (channel === "phone" && !otpSent)))}
               className="w-full h-11 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white font-medium"
             >
               {busy
@@ -320,7 +355,11 @@ function AuthPage() {
                 : otpSent
                 ? "Update password"
                 : channel === "email"
-                ? "Send reset email"
+                ? emailSent && cooldown > 0
+                  ? `Resend email (${cooldown}s)`
+                  : "Send reset email"
+                : cooldown > 0
+                ? `Resend code (${cooldown}s)`
                 : "Send code"}
             </Button>
 
