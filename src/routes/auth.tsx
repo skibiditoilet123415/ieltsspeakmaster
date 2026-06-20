@@ -16,7 +16,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-type Mode = "signin" | "signup" | "forgot";
+type Mode = "signin" | "signup" | "forgot" | "verify";
 type Channel = "email" | "phone";
 
 function AuthPage() {
@@ -24,16 +24,21 @@ function AuthPage() {
   const navigate = useNavigate();
   const { t } = useI18n();
   const [mode, setMode] = useState<Mode>("signin");
+  const [signupChannel, setSignupChannel] = useState<Channel>("email");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [pwFocused, setPwFocused] = useState(false);
   const [showPw, setShowPw] = useState(false);
   const [remember, setRemember] = useState(true);
 
-  // forgot password flow
+  // verification (post-signup) + forgot password flow
+  const [verifyCode, setVerifyCode] = useState("");
+  const [verifyCooldown, setVerifyCooldown] = useState(0);
+
   const [channel, setChannel] = useState<Channel>("email");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
@@ -42,14 +47,20 @@ function AuthPage() {
   const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
-    if (user) navigate({ to: "/" });
-  }, [user, navigate]);
+    if (user && mode !== "verify") navigate({ to: "/" });
+  }, [user, navigate, mode]);
 
   useEffect(() => {
     if (cooldown <= 0) return;
     const id = setInterval(() => setCooldown((c) => c - 1), 1000);
     return () => clearInterval(id);
   }, [cooldown]);
+
+  useEffect(() => {
+    if (verifyCooldown <= 0) return;
+    const id = setInterval(() => setVerifyCooldown((c) => c - 1), 1000);
+    return () => clearInterval(id);
+  }, [verifyCooldown]);
 
   const resetForgot = () => {
     setOtpSent(false);
@@ -61,36 +72,49 @@ function AuthPage() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (cooldown > 0 && isForgot && ((channel === "email" && emailSent) || (channel === "phone" && otpSent))) return;
     setBusy(true);
     try {
       if (mode === "signup") {
-        if (!email && !phone) {
-          throw new Error("Please provide an email or phone number");
-        }
+        if (signupChannel === "email" && !email) throw new Error("Please enter your email");
+        if (signupChannel === "phone" && !phone) throw new Error("Please enter your phone number");
+        if (!username.trim()) throw new Error("Please choose a username");
+        if (password.length < 6) throw new Error("Password must be at least 6 characters");
+        if (password !== confirmPassword) throw new Error("Passwords do not match");
+
         const { error } = await supabase.auth.signUp({
-          email: email || undefined,
-          phone: phone || undefined,
+          email: signupChannel === "email" ? email : undefined,
+          phone: signupChannel === "phone" ? phone : undefined,
           password,
           options: {
             emailRedirectTo: window.location.origin,
             data: {
-              display_name: name || (email ? email.split("@")[0] : phone),
-              phone: phone || null,
+              username: username.trim(),
+              display_name: username.trim(),
+              phone: signupChannel === "phone" ? phone : null,
             },
           },
         } as any);
         if (error) throw error;
         toast.success(
-          email
-            ? "Account created! Check your email to confirm."
-            : "Account created! Check your phone for a verification code."
+          signupChannel === "email"
+            ? "We sent a 6-digit code to your email"
+            : "We sent a 6-digit code to your phone"
         );
+        setMode("verify");
+        setVerifyCooldown(60);
+      } else if (mode === "verify") {
+        if (!verifyCode) throw new Error("Enter the verification code");
+        const { error } = await supabase.auth.verifyOtp(
+          signupChannel === "email"
+            ? { email, token: verifyCode, type: "email" }
+            : ({ phone, token: verifyCode, type: "sms" } as any)
+        );
+        if (error) throw error;
+        toast.success("Account verified! Welcome aboard.");
+        navigate({ to: "/" });
       } else if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword(
-          email
-            ? { email, password }
-            : ({ phone, password } as any)
+          email ? { email, password } : ({ phone, password } as any)
         );
         if (error) throw error;
       } else if (mode === "forgot") {
@@ -112,7 +136,6 @@ function AuthPage() {
             toast.success("Verification code sent to your phone");
             setCooldown(60);
           } else {
-            // phone OTP verify + update password
             const { error: vErr } = await supabase.auth.verifyOtp({
               phone,
               token: otp,
@@ -133,6 +156,25 @@ function AuthPage() {
     }
   };
 
+  const resendVerification = async () => {
+    if (verifyCooldown > 0) return;
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.resend(
+        signupChannel === "email"
+          ? { type: "signup", email }
+          : ({ type: "sms", phone } as any)
+      );
+      if (error) throw error;
+      toast.success("Code resent");
+      setVerifyCooldown(60);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to resend");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const google = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
@@ -144,6 +186,7 @@ function AuthPage() {
   const isSignin = mode === "signin";
   const isSignup = mode === "signup";
   const isForgot = mode === "forgot";
+  const isVerify = mode === "verify";
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4 py-10" style={{ background: "#ececec" }}>
@@ -161,13 +204,21 @@ function AuthPage() {
           </div>
 
           <h1 className="text-center text-2xl font-bold text-neutral-900">
-            {isSignin ? "Welcome back!" : isSignup ? "Create your account" : "Reset password"}
+            {isSignin
+              ? "Welcome back!"
+              : isSignup
+              ? "Create your account"
+              : isVerify
+              ? "Verify your account"
+              : "Reset password"}
           </h1>
           <p className="text-center text-sm text-neutral-500 mt-1">
             {isSignin
               ? "Please enter your details"
               : isSignup
               ? "Start your IELTS Speaking journey"
+              : isVerify
+              ? `Enter the 6-digit code sent to your ${signupChannel === "email" ? email : phone}`
               : otpSent
               ? "Enter the code and a new password"
               : "We'll send a reset to your email or phone"}
@@ -175,10 +226,123 @@ function AuthPage() {
 
           <form onSubmit={submit} className="mt-7 space-y-4">
             {isSignup && (
-              <div>
-                <label className="text-xs font-medium text-neutral-600">Name</label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900" />
-              </div>
+              <>
+                <div>
+                  <label className="text-xs font-medium text-neutral-600">Username</label>
+                  <Input
+                    value={username}
+                    required
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
+                  />
+                </div>
+
+                <div className="flex gap-2 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setSignupChannel("email")}
+                    className={`flex-1 h-9 rounded-full border ${signupChannel === "email" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-200 text-neutral-700"}`}
+                  >
+                    Email
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSignupChannel("phone")}
+                    className={`flex-1 h-9 rounded-full border ${signupChannel === "phone" ? "bg-neutral-900 text-white border-neutral-900" : "border-neutral-200 text-neutral-700"}`}
+                  >
+                    Phone
+                  </button>
+                </div>
+
+                {signupChannel === "email" ? (
+                  <div>
+                    <label className="text-xs font-medium text-neutral-600">Email</label>
+                    <Input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="text-xs font-medium text-neutral-600">Phone</label>
+                    <Input
+                      type="tel"
+                      required
+                      placeholder="+15551234567"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="text-xs font-medium text-neutral-600">Password</label>
+                  <div className="relative">
+                    <Input
+                      type={showPw ? "text" : "password"}
+                      required
+                      minLength={6}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onFocus={() => setPwFocused(true)}
+                      onBlur={() => setPwFocused(false)}
+                      className="mt-1 border-0 border-b rounded-none px-0 pr-8 focus-visible:ring-0 focus-visible:border-neutral-900"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPw((s) => !s)}
+                      className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-neutral-500 hover:text-neutral-800"
+                      aria-label={showPw ? "Hide password" : "Show password"}
+                    >
+                      {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-neutral-600">Re-enter password</label>
+                  <Input
+                    type={showPw ? "text" : "password"}
+                    required
+                    minLength={6}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
+                  />
+                </div>
+              </>
+            )}
+
+            {isVerify && (
+              <>
+                <div>
+                  <label className="text-xs font-medium text-neutral-600">Verification code</label>
+                  <Input
+                    required
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    value={verifyCode}
+                    onChange={(e) => setVerifyCode(e.target.value.replace(/\D/g, ""))}
+                    placeholder="123456"
+                    className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900 text-center tracking-[0.5em] text-lg"
+                  />
+                </div>
+                <div className="text-right">
+                  <button
+                    type="button"
+                    disabled={verifyCooldown > 0 || busy}
+                    onClick={resendVerification}
+                    className="text-xs text-neutral-600 hover:text-neutral-900 disabled:text-neutral-400 disabled:cursor-not-allowed font-medium"
+                  >
+                    {verifyCooldown > 0 ? `Resend code (${verifyCooldown}s)` : "Resend code"}
+                  </button>
+                </div>
+              </>
             )}
 
             {isForgot && (
@@ -200,33 +364,14 @@ function AuthPage() {
               </div>
             )}
 
-            {/* Email field */}
-            {((isSignin) || (isSignup) || (isForgot && channel === "email")) && (
+            {(isSignin || (isForgot && channel === "email")) && (
               <div>
-                <label className="text-xs font-medium text-neutral-600">
-                  Email {isSignup && <span className="text-neutral-400">(or phone)</span>}
-                </label>
+                <label className="text-xs font-medium text-neutral-600">Email</label>
                 <Input
                   type="email"
-                  required={isSignin || isForgot}
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
-                />
-              </div>
-            )}
-
-            {/* Phone field */}
-            {(isSignup || (isForgot && channel === "phone") || (isSignin && !email)) && !isForgot && isSignup && (
-              <div>
-                <label className="text-xs font-medium text-neutral-600">
-                  Phone <span className="text-neutral-400">(or email)</span>
-                </label>
-                <Input
-                  type="tel"
-                  placeholder="+15551234567"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
                   className="mt-1 border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-neutral-900"
                 />
               </div>
@@ -246,8 +391,7 @@ function AuthPage() {
               </div>
             )}
 
-            {/* Password (signin/signup) */}
-            {(isSignin || isSignup) && (
+            {isSignin && (
               <div>
                 <label className="text-xs font-medium text-neutral-600">Password</label>
                 <div className="relative">
@@ -273,7 +417,6 @@ function AuthPage() {
               </div>
             )}
 
-            {/* Forgot — phone OTP step */}
             {isForgot && otpSent && channel === "phone" && (
               <>
                 <div>
@@ -352,6 +495,8 @@ function AuthPage() {
                 ? "Log in"
                 : isSignup
                 ? "Sign up"
+                : isVerify
+                ? "Verify & continue"
                 : otpSent
                 ? "Update password"
                 : channel === "email"
@@ -363,7 +508,7 @@ function AuthPage() {
                 : "Send code"}
             </Button>
 
-            {!isForgot && (
+            {!isForgot && !isVerify && (
               <Button
                 type="button"
                 variant="outline"
@@ -388,6 +533,13 @@ function AuthPage() {
                 onClick={() => { setMode("signin"); resetForgot(); }}
               >
                 ← Back to log in
+              </button>
+            ) : isVerify ? (
+              <button
+                className="text-neutral-900 font-medium hover:underline"
+                onClick={() => { setMode("signup"); setVerifyCode(""); }}
+              >
+                ← Back to sign up
               </button>
             ) : (
               <>
