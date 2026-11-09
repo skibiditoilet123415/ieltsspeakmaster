@@ -11,7 +11,16 @@ import { Eye, EyeOff } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — IELTS Speaking AI" }] }),
+  head: () => ({
+    meta: [
+      { title: "Sign in or create an account — IELTS Speaking Master" },
+      { name: "description", content: "Sign in or create an IELTS Speaking Master account to practice speaking and track your progress." },
+      { property: "og:title", content: "Sign in or create an account — IELTS Speaking Master" },
+      { property: "og:description", content: "Access IELTS speaking practice and progress tracking with IELTS Speaking Master." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: AuthPage,
 });
 
