@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import logoUrl from "@/assets/logo.png";
-import { AuthMascot } from "@/components/AuthMascot";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [{ title: "Sign in — IELTS Speaking AI" }] }),
@@ -191,13 +190,6 @@ function AuthPage() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center px-4 py-10" style={{ background: "#ececec" }}>
       <div className="relative w-full max-w-md">
-        <div
-          aria-hidden
-          className="hidden md:block absolute right-full top-1/2 -translate-y-1/2 w-[360px] h-[360px] mr-2"
-        >
-          <AuthMascot passwordFocused={pwFocused} />
-        </div>
-
         <div className="bg-white rounded-3xl shadow-[0_30px_60px_-30px_rgba(0,0,0,0.25)] px-8 py-10">
           <div className="flex justify-center mb-5">
             <img src={logoUrl} alt="Logo" className="h-10 w-10 rounded-xl object-contain" />
